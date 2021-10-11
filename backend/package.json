@@ -1,0 +1,32 @@
+{
+  "name": "schoolyard",
+  "version": "1.0.0",
+  "description": "A platform to connect and improve life for university students.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "app": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gracejiang/schoolyard.git"
+  },
+  "author": "Christina Lu, Damian Krupa, Grace Jiang, Carol Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gracejiang/schoolyard/issues"
+  },
+  "homepage": "https://github.com/gracejiang/schoolyard#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.10",
+    "validation": "0.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
