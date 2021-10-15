@@ -1,12 +1,12 @@
-import '../styles/App.css';
+import '../styles/App.css'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from 'react-router-dom';
-import Dashboard from './Dashboard';
-import UploadIcs from './UploadIcs';
+} from 'react-router-dom'
+import Dashboard from './Dashboard'
+import UploadIcs from './UploadIcs'
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
         </Switch>
       </Router>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

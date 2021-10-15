@@ -1,6 +1,6 @@
-import logo from '../images/logo.svg';
-import '../styles/App.css';
-import React from 'react';
+import logo from '../images/logo.svg'
+import '../styles/App.css'
+import React from 'react'
 
 function Dashboard() {
   return (
@@ -22,7 +22,7 @@ function Dashboard() {
         Learn React
       </a>
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard
