@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "app": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint \"**/*.js\" --fix"
   },
   "repository": {
     "type": "git",
@@ -19,14 +20,19 @@
   },
   "homepage": "https://github.com/gracejiang/schoolyard#readme",
   "dependencies": {
+    "aws-sdk": "^2.1008.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.10",
+    "express-fileupload": "^1.2.1",
+    "mongoose": "^6.0.11",
+    "uuid": "^8.3.2",
     "validation": "0.0.1"
   },
   "devDependencies": {
+    "eslint": "^8.0.1",
     "nodemon": "^2.0.13"
   }
 }
