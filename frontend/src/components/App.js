@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import Dashboard from './Dashboard'
 import UploadIcs from './UploadIcs'
+import Profile from './Profile'
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           </Route>
           <Route path="/upload-ics">
             <UploadIcs />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
           </Route>
           <Route>
             <Redirect to="/" />

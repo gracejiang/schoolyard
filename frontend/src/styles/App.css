@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -26,6 +26,28 @@
 
 .App-link {
   color: #61dafb;
+} */
+
+/** Profile CSS */
+
+.profile-wrapper {
+  
+}
+
+.profile-header {
+  clear: both;
+}
+
+.profile-bio-wrapper {
+  float: right;
+}
+
+h1.name-text {}
+
+h1.bio-text {}
+
+img.profile-img {
+  float: left;
 }
 
 @keyframes App-logo-spin {
