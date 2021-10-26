@@ -28,26 +28,100 @@
   color: #61dafb;
 } */
 
+h1 {
+  font-size: 50px;
+  font-weight: 600;
+  line-height: 68px;
+  color: #4A4A4A;
+}
+
+h2 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 36px;
+}
+
+h3 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 36px;
+}
+
+p {
+  font-weight: 500;
+  color: #4A4A4A;
+}
+
+a {
+  color: #68BBCF;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #2C97B1;
+}
+
+.wrapper {
+  padding-top: 130px;
+  margin-left: 15% !important;
+  margin-right: 15% !important;
+  padding-bottom: 130px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
 /** Profile CSS */
 
-.profile-wrapper {
-  
+#profile .bio-info-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 30px 30px;
+  align-content: flex-start;
 }
 
-.profile-header {
-  clear: both;
-}
+#profile .info-text-wrapper {}
 
-.profile-bio-wrapper {
-  float: right;
-}
+#profile .bio {}
 
-h1.name-text {}
-
-h1.bio-text {}
-
-img.profile-img {
+#profile button .settings-button {
+  width: auto;
+  margin-left: 5px;
+  padding: 14px 14px 17px 14px;
   float: left;
+  display: flex;
+  background-color: #68bbcf;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#profile .settings-button:hover {
+  background-color: greenyellow;
+  margin-left: 2.5px;
+  margin-right: 2.5px;
+  transform: scale(1.07);
+}
+
+#profile .classes, #profile .groups {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px 50px;
+  align-content: flex-start;
+}
+
+#profile img .profile-img {}
+
+#profile h2 .section-text {}
+
+#profile h3 .desc-text {
+  line-height: 5px !important;
 }
 
 @keyframes App-logo-spin {
