@@ -10,17 +10,17 @@ import UploadIcs from './UploadIcs'
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Switch>
-          <Route exact path="/">
+          <Route exact path='/'>
             <Dashboard />
           </Route>
-          <Route path="/upload-ics">
+          <Route path='/upload-ics'>
             <UploadIcs />
           </Route>
           <Route>
-            <Redirect to="/" />
+            <Redirect to='/' />
           </Route>
         </Switch>
       </Router>
