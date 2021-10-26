@@ -5,7 +5,7 @@ function Profile() {
   return (
     <div id="profile" className='wrapper'>
         <div className='profile-header'>
-        <button className='settings-button'>Settings</button>
+            <button className='settings-button'>Settings</button>
             <div className='bio-info-wrapper'>
                 <img src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' className='profile-img' height='300px' width='300px'></img>
                 <div className="info-text-wrapper">

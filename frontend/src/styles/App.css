@@ -83,11 +83,16 @@ a:hover {
   flex-wrap: wrap;
   gap: 30px 30px;
   align-content: flex-start;
+  overflow: hidden;
 }
 
 #profile .info-text-wrapper {}
 
 #profile .bio {}
+
+#profile .profile-header {
+  clear: both;
+}
 
 #profile button .settings-button {
   width: auto;
@@ -99,6 +104,7 @@ a:hover {
   color: white;
   border-radius: 8px;
   cursor: pointer;
+  float: right;
 }
 
 #profile .settings-button:hover {
@@ -120,9 +126,7 @@ a:hover {
 
 #profile h2 .section-text {}
 
-#profile h3 .desc-text {
-  line-height: 5px !important;
-}
+#profile h3 .desc-text {}
 
 @keyframes App-logo-spin {
   from {
