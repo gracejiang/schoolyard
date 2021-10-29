@@ -48,7 +48,7 @@ const port = process.env.PORT || 8082
 const server = app.listen(port, () => console.log(`Server running on port ${port}`))
 
 if (process.env.COMPILE_CHECK) {
-  server.close((err) => {
+  server.close(err => {
     console.log('server closed')
     process.exit(err ? 1 : 0)
   })

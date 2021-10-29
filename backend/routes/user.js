@@ -27,15 +27,15 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.post("/login", (req, res) => {
+router.post('/login', (req, res) => {
 
-    const user = req.body;
+    const user = req.body
 
     User.findOne({username: user.username})
     .then(dbUser => {
         if (!dbUser) {
             return res.json({
-                error: "Invalid Username or Password"
+                error: 'Invalid Username or Password'
             })
         }
         bcrypt.compare(user.password, dbUser.password)
@@ -52,15 +52,14 @@ router.post("/login", (req, res) => {
                     (err, token) => {
                         if (err) return res.json({message: err})
                         return res.json({
-                            message: "Success",
-                            token: "Bearer " + token
+                            message: 'Success',
+                            token: 'Bearer ' + token
                         })
                     }
                 )
-            }
-            else {
+            } else {
                 return res.json({
-                    message: "Invalid Username or Password"
+                    message: 'Invalid Username or Password'
                 })
             }
         })

@@ -1,4 +1,4 @@
-const verifyJWT = require("../middleware/jwt")
+const verifyJWT = require('../middleware/jwt')
 
 const express = require('express')
 const uuid = require('uuid')
