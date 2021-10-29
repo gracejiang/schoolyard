@@ -12,6 +12,7 @@
     "react-scripts": "4.0.3"
   },
   "scripts": {
+    "prestart": "node install-pre-commit.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

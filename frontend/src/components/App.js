@@ -8,6 +8,8 @@ import {
 import Dashboard from './Dashboard'
 import UploadIcs from './UploadIcs'
 import Profile from './Profile'
+import Register from "./Register";
+import Login from "./Login";
 
 function App() {
   return (
@@ -22,6 +24,12 @@ function App() {
           </Route>
           <Route exact path="/profile">
             <Profile />
+          </Route>
+          <Route exact path='/register'>
+            <Register/>
+          </Route>
+          <Route exact path='/login'>
+            <Login/>
           </Route>
           <Route>
             <Redirect to="/" />

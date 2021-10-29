@@ -26,3 +26,5 @@ cd ../backend
 npm install
 npm run lint
 ```
+
+Upon the first start of the application, a pre-commit hook will be installed. This hook prevents you from committing code that doesn't compile.

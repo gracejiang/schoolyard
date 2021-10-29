@@ -45,4 +45,11 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 8082
 
-app.listen(port, () => console.log(`Server running on port ${port}`))
+const server = app.listen(port, () => console.log(`Server running on port ${port}`))
+
+if (process.env.COMPILE_CHECK) {
+  server.close((err) => {
+    console.log('server closed')
+    process.exit(err ? 1 : 0)
+  })
+}
