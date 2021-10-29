@@ -1,3 +1,5 @@
+const verifyJWT = require("../middleware/jwt")
+
 const express = require('express')
 const uuid = require('uuid')
 const { S3 } = require('../aws/s3')
@@ -6,14 +8,13 @@ const Ics = require('../models/ics')
 const router = express.Router()
 
 const ICS_FILES_BUCKET = 'schoolyard-ics-files'
-const USERNAME = 'USERNAME' // TODO: replace with actual username after authentication is implemented
 
-// TODO: add user authentication
-router.get('/ics/:s3IcsId', async (req, res, next) => {
+router.get('/ics/:s3IcsId', verifyJWT, async (req, res, next) => {
   const { s3IcsId } = req.params
+  const username = req.user?.username
   try {
     // authenticate that this ICS file belongs to this user
-    const userIcs = await Ics.findOne({ username: USERNAME, s3_ics_id: s3IcsId })
+    const userIcs = await Ics.findOne({ username, s3_ics_id: s3IcsId })
     if (!userIcs) {
       return next("You don't own such ICS file!")
     }
@@ -21,7 +22,7 @@ router.get('/ics/:s3IcsId', async (req, res, next) => {
     // return ICS file to the user
     S3.getObject({
       Bucket: ICS_FILES_BUCKET,
-      Key: `${USERNAME}/${s3IcsId}.ics`
+      Key: `${username}/${s3IcsId}.ics`
     }).createReadStream()
       .pipe(res)
   } catch (err) {
@@ -29,8 +30,8 @@ router.get('/ics/:s3IcsId', async (req, res, next) => {
   }
 })
 
-// TODO: add user authentication
-router.post('/upload-ics', async (req, res, next) => {
+router.post('/upload-ics', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
   if (req?.files?.icsFile?.mimetype !== 'text/calendar') {
     next('No ICS file has been uploaded!')
     return
@@ -39,11 +40,11 @@ router.post('/upload-ics', async (req, res, next) => {
   try {
     await S3.putObject({
       Bucket: ICS_FILES_BUCKET,
-      Key: `${USERNAME}/${s3IcsId}.ics`,
+      Key: `${username}/${s3IcsId}.ics`,
       Body: req.files.icsFile.data.toString()
     }).promise()
     res.send(await Ics.create({
-      username: USERNAME,
+      username,
       s3_ics_id: s3IcsId,
     }))
   } catch (err) {

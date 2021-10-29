@@ -1,5 +1,6 @@
 import { useHistory } from 'react-router'
 import { useEffect } from 'react'
+import {post} from "../util/rest";
 
 export default function Register() {
   const history = useHistory()
@@ -14,13 +15,7 @@ export default function Register() {
       password: form[2].value,
     }
 
-    fetch('/user/register', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
+    post('user/register', user, () => alert("Success!"))
   }
 
   return (
