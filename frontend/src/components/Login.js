@@ -14,17 +14,17 @@ export default function Login() {
       password: form[1].value,
     }
 
-    post('user/login', user, ({data}) => {
-      alert("Success!")
+    post('user/login', user, ({ data }) => {
+      alert('Success!')
       localStorage.accessToken = data.token
     })
   }
 
   return (
-    <form onSubmit={(e) => handleLogin(e)}>
-      <input required type='email' />
-      <input required type='password' />
-      <input type='submit' value='Submit' />
+    <form onSubmit={e => handleLogin(e)}>
+      <input required type="email" />
+      <input required type="password" />
+      <input type="submit" value="Submit" />
     </form>
   )
 }

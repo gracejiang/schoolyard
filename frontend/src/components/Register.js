@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router'
 import { useEffect } from 'react'
-import {post} from "../util/rest";
+import { post } from '../util/rest'
 
 export default function Register() {
   const history = useHistory()
@@ -15,15 +15,15 @@ export default function Register() {
       password: form[2].value,
     }
 
-    post('user/register', user, () => alert("Success!"))
+    post('user/register', user, () => alert('Success!'))
   }
 
   return (
-    <form onSubmit={(event) => handleRegister(event)}>
-      <input required type='text' />
-      <input required type='email' />
-      <input required type='password' />
-      <input type='submit' value='Register' />
+    <form onSubmit={event => handleRegister(event)}>
+      <input required type="text" />
+      <input required type="email" />
+      <input required type="password" />
+      <input type="submit" value="Register" />
     </form>
   )
 }

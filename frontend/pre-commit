@@ -4,7 +4,7 @@
 
 echo "*****Checking if the backend compiles******"
 cdup="$(git rev-parse --show-cdup)" && cd "${cdup:-.}/backend"
-COMPILE_CHECK=1 npm run-script start
+COMPILE_CHECK=1 PORT=8083 npm run-script start
 
 backend_status=$?
 
