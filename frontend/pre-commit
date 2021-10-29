@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#git stash -q --keep-index
+
+echo "*****Checking if the backend compiles******"
+cdup="$(git rev-parse --show-cdup)" && cd "${cdup:-.}/backend"
+COMPILE_CHECK=1 npm run-script start
+
+backend_status=$?
+
+if [[ $backend_status -ne 0 ]]; then
+  exit $backend_status
+fi
+
+echo "*****Checking if the frontend compiles******"
+cdup="$(git rev-parse --show-cdup)" && cd "${cdup:-.}/frontend"
+npm run-script build
+
+frontend_status=$?
+
+if [[ $frontend_status -ne 0 ]]; then
+  exit $frontend_status
+fi
+
+#git stash pop -q
+
+exit 0

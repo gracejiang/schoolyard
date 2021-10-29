@@ -35,7 +35,7 @@ router.post("login", (req, res) => {
     .then(dbUser => {
         if (!dbUser) {
             return res.json({
-                "Invalid Username or Password"
+                error: "Invalid Username or Password"
             })
         }
         bcrypt.compare(user.password, dbUser.password)
@@ -66,3 +66,5 @@ router.post("login", (req, res) => {
         })
     })
 })
+
+module.exports = router
