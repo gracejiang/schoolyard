@@ -1,5 +1,6 @@
 import '../styles/App.css'
 import React from 'react'
+import Calendar from "./Calendar";
 
 function Profile() {
   return (
@@ -27,7 +28,7 @@ function Profile() {
         </div>
         <div className='schedule'>
             <h2 className='profile-section-text'>Schedule</h2>
-            <img src="https://miro.medium.com/max/1015/1*m4uMdohDG5maiJ0dIwqKuQ.png"></img>
+            <Calendar/>
         </div>
         <div className='classes-section'>
             <h2 className='section-text'>Classes</h2>
