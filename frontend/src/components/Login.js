@@ -1,5 +1,6 @@
 import { useHistory } from 'react-router'
 import { useEffect } from 'react'
+import { post } from '../util/rest'
 
 export default function Login() {
   const history = useHistory()
@@ -13,17 +14,10 @@ export default function Login() {
       password: form[1].value,
     }
 
-    fetch('/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(user),
+    post('user/login', user, ({data}) => {
+      alert("Success!")
+      localStorage.accessToken = data.token
     })
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.setItem('token', data.token)
-      })
   }
 
   return (
