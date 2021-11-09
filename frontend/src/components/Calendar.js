@@ -27,6 +27,19 @@ function Calendar() {
         scrollTime={"08:00:00"}
         scrollTimeReset={false}
         allDaySlot={false}
+        customButtons={{
+          manageIcs: {
+            text: 'iCal files',
+            click: () => {
+              alert("iCal files")
+            }
+          }
+        }}
+        headerToolbar={{
+          left: 'manageIcs',
+          right: 'prev,next today',
+          center: 'title',
+        }}
       />
     </>
   )
