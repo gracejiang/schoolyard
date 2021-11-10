@@ -1,19 +1,21 @@
-import '../styles/exchange.css'
+import '../styles/exchange-page.css'
 import Listing from './exchange/Listing'
 
 function ExchangePage() {
     return (
       <div className="exchange-page">
-        <div>
-          <a href="">All Listings</a><br/>
-          <a href="">Your Listings</a>
+        <div className="exchange-navbar">
+          <ul>
+            <li><a href="">All Listings</a></li>
+            <li><a href="">Your Listings</a></li>
+          </ul>
         </div>
-        <div>
-          <h1>Exchange</h1>
+        <div className="exchange-search-box">
+          <h1>Exchanges Page</h1>
           <input placeholder="What are you looking for?"></input>
           <button>Search</button>
         </div>
-        <div>
+        <div className="exchange-filters1">
           <h3>Their Filters</h3>
           <p>
             <input type="checkbox"/>Item<br/>
@@ -22,7 +24,7 @@ function ExchangePage() {
             <button>Filter</button>
           </p>
         </div>
-        <div>
+        <div className="exchange-filters2">
           <h3>Your Filters</h3>
           <p>
             <input type="checkbox"/>Item<br/>
