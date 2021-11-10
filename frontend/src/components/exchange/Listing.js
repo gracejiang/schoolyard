@@ -1,7 +1,7 @@
-function Exchange() {
+function Listing() {
     return (
-      <div className="exchange">
-        <h2>this is an exchange</h2>
+      <div className="listing">
+        <h2>this is a listing</h2>
         <p><b>User 1</b>is offering</p>
         <p><b>User 2</b>is offering</p>
         <p>
@@ -13,5 +13,5 @@ function Exchange() {
     )
   }
   
-  export default Exchange
+  export default Listing
   
