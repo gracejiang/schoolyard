@@ -1,9 +1,10 @@
 import { InputGroup, Form, FormControl, Button } from "react-bootstrap";
+import Listing from "./Listing"
 import "../../styles/all-exchanges.css";
 
 function AllListings() {
   return (
-    <div>
+    <div className="exchange-all-listings">
       <div className="exchange-search-box">
         <h1>All Listings</h1>
         <InputGroup className="mb-3 exchange-search-box-input">
@@ -36,6 +37,10 @@ function AllListings() {
             Filter
           </Button>
         </Form>
+      </div>
+      <div className="exchange-listings">
+          <h2>LISTINGS</h2>
+          <Listing></Listing>
       </div>
     </div>
   );

@@ -1,22 +1,24 @@
-.listing {
-  border: solid black 1px;
-  margin: 20px;
-  padding: 20px;
-  border-radius: 15px;
-  width: 360px;
-  display: inline-block;
+.exchange-all-listings {
+  padding-top: 40px;
+  padding-left: 4vw;
+  padding-right: 4vw;
 }
 
 .exchange-search-box {
   text-align: center;
-  padding: 0 60px;
 }
 
 .exchange-filter-box {
   float: left;
-  margin: 60px;
   padding: 20px;
   max-width: 300px;
   border: 2px solid #d8dde1;
   border-radius: 5px;
+  margin-top: 60px;
+  margin-right: 60px;
+}
+
+.exchange-listings {
+  float: left;
+  margin-top: 60px;
 }
