@@ -13,7 +13,7 @@ function AllListings() {
             aria-label="Searchbox text"
             aria-describedby="basic-addon2"
           />
-          <Button variant="outline-secondary" id="button-addon2">
+          <Button variant="primary" id="button-addon2" >
             Search
           </Button>
         </InputGroup>
@@ -39,8 +39,9 @@ function AllListings() {
         </Form>
       </div>
       <div className="exchange-listings">
-          <h2>LISTINGS</h2>
-          <Listing></Listing>
+          <Listing/>
+          <Listing/>
+          <Listing/>
       </div>
     </div>
   );
