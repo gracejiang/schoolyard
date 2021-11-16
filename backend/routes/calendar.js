@@ -9,6 +9,15 @@ const router = express.Router()
 
 const ICS_FILES_BUCKET = 'schoolyard-ics-files'
 
+router.get('/ics', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
+  try {
+    res.send((await Ics.find({ username })).map(icsData => icsData.s3_ics_id))
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get('/ics/:s3IcsId', verifyJWT, async (req, res, next) => {
   const { s3IcsId } = req.params
   const username = req.user?.username
