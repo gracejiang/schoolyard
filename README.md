@@ -28,3 +28,7 @@ npm run lint
 ```
 
 Upon the first start of the application, a pre-commit hook will be installed. This hook prevents you from committing code that doesn't compile.
+
+### Packages/Libraries
+
+`npm install react-bootstrap@next bootstrap@5.1.3`

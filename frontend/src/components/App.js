@@ -10,6 +10,8 @@ import UploadIcs from './UploadIcs'
 import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
+import ExchangePage from './ExchangePage'
+
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
           </Route>
           <Route path="/upload-ics">
             <UploadIcs />
+          </Route>
+          <Route exact path="/exchange">
+            <ExchangePage />
           </Route>
           <Route exact path="/profile">
             <Profile />
