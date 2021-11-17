@@ -19,6 +19,6 @@ module.exports = (req, res, next) => {
     })
   } else {
     res.status(403)
-    res.json({ message: 'Incorrect token given', isLoggedIn: false })
+    res.json({ message: 'You are not logged in', isLoggedIn: false })
   }
 }

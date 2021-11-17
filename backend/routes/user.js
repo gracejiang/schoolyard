@@ -6,7 +6,7 @@ const User = require('../models/user')
 const router = express.Router()
 
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   const user = req.body
 
   const takenUsername = await User.findOne({ username: user.username })
@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
 
   if (takenUsername || takenEmail) {
     // TODO: Popup here
-    res.json({ message: 'Username or email is not available' })
+    return next('Username or email is not available')
   } else {
     user.password = await bcrypt.hash(req.body.password, 10)
 
@@ -30,17 +30,14 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
 
     const user = req.body
 
     User.findOne({username: user.username})
     .then(dbUser => {
         if (!dbUser) {
-            // TODO: Popup here
-            return res.json({
-                error: 'Invalid Username or Password'
-            })
+            return next('Invalid Username or Password')
         }
         bcrypt.compare(user.password, dbUser.password)
         .then(correctPassword => {
@@ -56,7 +53,7 @@ router.post('/login', (req, res) => {
                     (err, token) => {
                         if (err) { 
                             // TODO: Popup here
-                            return res.json({message: err}) 
+                            return next(err)
                         }
                         // TODO: Popup here
                         return res.json({
@@ -67,9 +64,7 @@ router.post('/login', (req, res) => {
                 )
             } else {
                 // TODO: Popup here
-                return res.json({
-                    message: 'Invalid Username or Password'
-                })
+                return next('Invalid Username or Password')
             }
         })
     })

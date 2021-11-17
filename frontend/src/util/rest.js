@@ -28,7 +28,11 @@ const sendRequest = (method, path, data, onSuccess, onError, headers) => {
     if (onError) {
       onError(err)
     } else if (err && err.response) {
-      alert(err.response.data)
+      if (err.response.data.message) {
+        alert(err.response.data.message)
+      } else {
+        alert(err.response.data)
+      }
     }
   })
 }
