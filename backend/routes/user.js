@@ -5,6 +5,7 @@ const User = require('../models/user')
 
 const router = express.Router()
 
+
 router.post('/register', async (req, res) => {
   const user = req.body
 
@@ -12,6 +13,7 @@ router.post('/register', async (req, res) => {
   const takenEmail = await User.findOne({ email: user.email })
 
   if (takenUsername || takenEmail) {
+    // TODO: Popup here
     res.json({ message: 'Username or email is not available' })
   } else {
     user.password = await bcrypt.hash(req.body.password, 10)
@@ -23,6 +25,7 @@ router.post('/register', async (req, res) => {
     })
 
     dbUser.save()
+    // TODO: Popup here
     res.json({ message: 'Success' })
   }
 })
@@ -34,6 +37,7 @@ router.post('/login', (req, res) => {
     User.findOne({username: user.username})
     .then(dbUser => {
         if (!dbUser) {
+            // TODO: Popup here
             return res.json({
                 error: 'Invalid Username or Password'
             })
@@ -50,7 +54,11 @@ router.post('/login', (req, res) => {
                     process.env.JWT_SECRET,
                     {expiresIn: 86400},
                     (err, token) => {
-                        if (err) return res.json({message: err})
+                        if (err) { 
+                            // TODO: Popup here
+                            return res.json({message: err}) 
+                        }
+                        // TODO: Popup here
                         return res.json({
                             message: 'Success',
                             token: 'Bearer ' + token
@@ -58,6 +66,7 @@ router.post('/login', (req, res) => {
                     }
                 )
             } else {
+                // TODO: Popup here
                 return res.json({
                     message: 'Invalid Username or Password'
                 })
