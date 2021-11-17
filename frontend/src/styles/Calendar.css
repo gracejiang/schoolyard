@@ -1,0 +1,10 @@
+.schedule a {
+    color: #68BBCF;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.schedule a:hover {
+    color: #2C97B1;
+}

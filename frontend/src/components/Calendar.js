@@ -1,25 +1,32 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
+import "../styles/Calendar.css"
+import {get, getServerUrl} from "../util/rest";
 
 function Calendar() {
   const calendarRef = useRef();
-  window.setTimeout(() => {
-    console.log(calendarRef.current)
-  })
+  useEffect(() => {
+    get("calendar/ics", result => {
+      if (result?.data?.length) {
+        for (const icsId of result.data) {
+          calendarRef.current.getApi().addEventSource({
+            url: getServerUrl(`calendar/ics/${icsId}?accessToken=${
+              encodeURIComponent(localStorage.accessToken)}`),
+            format: 'ics',
+          })
+        }
+      }
+    });
+  }, [])
   return (
     <>
       <FullCalendar
         ref={calendarRef}
         plugins={[timeGridPlugin, iCalendarPlugin, interactionPlugin]}
         initialView="timeGridWeek"
-        events={{
-          url: `http://localhost:8082/calendar/ics/4c875e0e-ce5c-43ef-83c5-86d66f6236a1?accessToken=${
-            encodeURIComponent(localStorage.accessToken)}`,
-          format: 'ics',
-        }}
         eventMaxStack={3}
         editable={true}
         contentHeight={600}
