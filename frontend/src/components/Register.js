@@ -20,9 +20,9 @@ export default function Register() {
 
   return (
     <form onSubmit={event => handleRegister(event)}>
-      <input required type="text" />
-      <input required type="email" />
-      <input required type="password" />
+      <input required type="text" placeholder="username" />
+      <input required type="email" placeholder="email" />
+      <input required type="password" placeholder="password" />
       <input type="submit" value="Register" />
     </form>
   )

@@ -1,0 +1,53 @@
+.exchange-all-listings {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-left: 4vw;
+  padding-right: 5vw;
+}
+
+.exchange-search-box {
+  text-align: center;
+}
+
+.exchange-filter-box {
+  float: left;
+  padding: 20px;
+  width: 20%;
+  border: 2px solid #d8dde1;
+  border-radius: 5px;
+  margin-top: 60px;
+}
+
+.exchange-listings {
+  padding-left: 4vw;
+  width: 80%;
+  float: left;
+  margin-top: 60px;
+}
+
+.listing {
+  display: inline-block;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.listing-their {
+  width: 50%;
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.listing-your {
+  width: 50%;
+  float: right;
+  padding-left: 10px;
+}
+
+.listing-buttons {
+  margin-top: 20px;
+}
+
+.listing-button {
+  margin-right: 20px;
+  margin-top: 20px;
+}

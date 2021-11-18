@@ -1,44 +1,34 @@
-import '../styles/exchange-page.css'
-import Listing from './exchange/Listing'
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import AllListings from "./exchange/AllListings";
+import YourListings from "./exchange/YourListings";
+
+import {
+  Tab,
+  Tabs,
+  Container,
+} from "react-bootstrap";
 
 function ExchangePage() {
-    return (
+  return (
+    <Container fluid>
       <div className="exchange-page">
-        <div className="exchange-navbar">
-          <ul>
-            <li><a href="">All Listings</a></li>
-            <li><a href="">Your Listings</a></li>
-          </ul>
-        </div>
-        <div className="exchange-search-box">
-          <h1>Exchanges Page</h1>
-          <input placeholder="What are you looking for?"></input>
-          <button>Search</button>
-        </div>
-        <div className="exchange-filters1">
-          <h3>Their Filters</h3>
-          <p>
-            <input type="checkbox"/>Item<br/>
-            <input type="checkbox"/>Service<br/>
-            <input type="checkbox"/>Money<br/>
-            <button>Filter</button>
-          </p>
-        </div>
-        <div className="exchange-filters2">
-          <h3>Your Filters</h3>
-          <p>
-            <input type="checkbox"/>Item<br/>
-            <input type="checkbox"/>Service<br/>
-            <input type="checkbox"/>Money<br/>
-            <button>Filter</button>
-          </p>
-        </div>
-        <div className="exchange-listings">
-          <Listing/>
-        </div>
+        <Tabs
+          defaultActiveKey="all-listings"
+          id="uncontrolled-tab-example"
+          className="mb-3"
+        >
+          <Tab eventKey="all-listings" title="All Listings">
+            <AllListings></AllListings>
+          </Tab>
+          <Tab eventKey="your-listings" title="Your Listings">
+            <YourListings></YourListings>
+          </Tab>
+        </Tabs>
+        <div className="exchange-search-box"></div>
       </div>
-    )
-  }
-  
-  export default ExchangePage
-  
+    </Container>
+  );
+}
+
+export default ExchangePage;
