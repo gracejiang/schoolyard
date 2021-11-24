@@ -6,7 +6,6 @@ import {
   Redirect,
 } from 'react-router-dom'
 import Dashboard from './Dashboard'
-import UploadIcs from './UploadIcs'
 import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
@@ -20,9 +19,6 @@ function App() {
         <Switch>
           <Route exact path='/'>
             <Dashboard />
-          </Route>
-          <Route path='/upload-ics'>
-            <UploadIcs />
           </Route>
           <Route exact path='/exchange'>
             <ExchangePage />

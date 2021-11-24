@@ -1,13 +1,15 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
-import "../styles/Calendar.css"
-import {get, getServerUrl} from "../util/rest";
+import "../../styles/Calendar.css"
+import {get, getServerUrl} from "../../util/rest";
+import IcsManagementModal from "./IcsManagementModal";
 
 function Calendar() {
   const calendarRef = useRef();
+  const [showIcsManagementModal, setShowIcsManagementModal] = useState(false)
   useEffect(() => {
     get("calendar/ics", result => {
       if (result?.data?.length) {
@@ -38,7 +40,7 @@ function Calendar() {
           manageIcs: {
             text: 'iCal files',
             click: () => {
-              alert("iCal files")
+              setShowIcsManagementModal(true)
             }
           }
         }}
@@ -47,6 +49,11 @@ function Calendar() {
           right: 'prev,next today',
           center: 'title',
         }}
+      />
+      <IcsManagementModal
+        show={showIcsManagementModal}
+        setShow={setShowIcsManagementModal}
+        calendarApi={calendarRef?.current?.getApi()}
       />
     </>
   )
