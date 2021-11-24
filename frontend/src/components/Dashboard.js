@@ -7,9 +7,6 @@ function Dashboard() {
       <h1>Schoolyard</h1>
       <ul>
         <li>
-          <a href='upload-ics'>Upload ICS</a>
-        </li>
-        <li>
           <a href='profile'>Profile</a>
         </li>
         <li>

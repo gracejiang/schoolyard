@@ -1,6 +1,6 @@
 import '../styles/App.css'
 import React from 'react'
-import Calendar from './Calendar'
+import Calendar from './scheduling/Calendar'
 
 function Profile() {
   return (
