@@ -28,7 +28,7 @@ function Profile() {
           </p>
         </div>
       </div>
-      <div className="schedule">
+      <div>
         <h2 className="profile-section-text">Schedule</h2>
         <Calendar />
       </div>
