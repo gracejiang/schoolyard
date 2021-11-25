@@ -14,7 +14,7 @@ function UploadIcs({icsFiles, setIcsFiles}) {
     formData.append('icsFile', icsFile)
     post('calendar/upload-ics', formData, res => {
       if (res?.data?.s3_ics_id) {
-        setIcsFiles([...icsFiles, {s3IcsId: req.data.s3_ics_id, icsName: req.data.ics_name}])
+        setIcsFiles([...icsFiles, {s3IcsId: res.data.s3_ics_id, icsName: res.data.ics_name}])
       }
     }, null, {
       'Content-Type': 'multipart/form-data',
