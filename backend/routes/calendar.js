@@ -50,10 +50,10 @@ router.delete('/ics/:s3IcsId', verifyJWT, async (req, res, next) => {
     }
 
     await Ics.deleteOne({ username, s3_ics_id: s3IcsId })
-    await S3.deleteObject({ // TODO: doesn't work - fix
+    await S3.deleteObject({
       Bucket: ICS_FILES_BUCKET,
       Key: `${username}/${s3IcsId}.ics`
-    })
+    }).promise()
     return res.json({success: true})
   } catch (err) {
     next(err)
