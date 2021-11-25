@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { post, getServerUrl } from '../../util/rest'
 import { Button } from "react-bootstrap";
 
-function UploadIcs({calendarApi}) {
+function UploadIcs({icsFiles, setIcsFiles}) {
   const inputRef = useRef()
 
   const handleChange = e => {
@@ -13,13 +13,8 @@ function UploadIcs({calendarApi}) {
     const formData = new FormData()
     formData.append('icsFile', icsFile)
     post('calendar/upload-ics', formData, res => {
-      alert(`Uploaded a file with assigned ID: ${res?.data?.s3_ics_id}`)
-      if (res?.data?.s3_ics_id && calendarApi) {
-        calendarApi.addEventSource({
-          url: getServerUrl(`calendar/ics/${res.data.s3_ics_id}?accessToken=${
-            encodeURIComponent(localStorage.accessToken)}`),
-          format: 'ics',
-        })
+      if (res?.data?.s3_ics_id) {
+        setIcsFiles([...icsFiles, {s3IcsId: req.data.s3_ics_id, icsName: req.data.ics_name}])
       }
     }, null, {
       'Content-Type': 'multipart/form-data',
@@ -29,7 +24,7 @@ function UploadIcs({calendarApi}) {
   return (
     <>
       <input accept=".ics" onChange={handleChange} multiple={false} ref={inputRef} type="file" hidden />
-      <Button variant="primary" onClick={() => inputRef.current.click()}>
+      <Button disabled={icsFiles.length >= 10} variant="primary" onClick={() => inputRef.current.click()}>
         Upload new iCal
       </Button>
     </>
