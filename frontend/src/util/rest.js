@@ -10,6 +10,9 @@ export const getServerUrl = path => `${SERVER_ADDRESS.localhost}/${path}`
 export const post = (path, data, onSuccess, onError, headers) => sendRequest('post', path, data, onSuccess, onError, headers)
 
 // path, onSuccess are required arguments
+export const remove = (path, data, onSuccess, onError, headers) => sendRequest('delete', path, data, onSuccess, onError, headers)
+
+// path, onSuccess are required arguments
 export const get = (path, onSuccess, onError, headers) => sendRequest('get', path, null, onSuccess, onError, headers)
 
 const sendRequest = (method, path, data, onSuccess, onError, headers) => {

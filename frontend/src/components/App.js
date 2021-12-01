@@ -6,29 +6,25 @@ import {
   Redirect,
 } from 'react-router-dom'
 import Dashboard from './Dashboard'
-import UploadIcs from './UploadIcs'
 import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
 import ExchangePage from './ExchangePage'
 import Group from './Group'
-
+import Classes from './Classes'
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Switch>
-          <Route exact path="/">
+          <Route exact path='/'>
             <Dashboard />
           </Route>
-          <Route path="/upload-ics">
-            <UploadIcs />
-          </Route>
-          <Route exact path="/exchange">
+          <Route exact path='/exchange'>
             <ExchangePage />
           </Route>
-          <Route exact path="/profile">
+          <Route exact path='/profile'>
             <Profile />
           </Route>
           <Route exact path="/group">
@@ -37,11 +33,14 @@ function App() {
           <Route exact path="/register">
             <Register />
           </Route>
-          <Route exact path="/login">
+          <Route exact path='/login'>
             <Login />
           </Route>
+          <Route exact path='/classes'>
+            <Classes />
+          </Route>
           <Route>
-            <Redirect to="/" />
+            <Redirect to='/' />
           </Route>
         </Switch>
       </Router>

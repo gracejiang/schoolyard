@@ -1,7 +1,7 @@
 import '../styles/App.css'
 import { Button, Container, Col, Card } from "react-bootstrap";
 import React from 'react'
-import Calendar from './Calendar'
+import Calendar from './scheduling/Calendar.js'
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Profile() {

@@ -1,5 +1,5 @@
-import "../styles/App.css";
-import React from "react";
+import '../styles/App.css'
+import React from 'react'
 
 function Dashboard() {
   return (
@@ -14,7 +14,7 @@ function Dashboard() {
         <li><a href="group">Group</a></li>
       </ul>
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard
