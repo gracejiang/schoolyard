@@ -6,6 +6,7 @@ import iCalendarPlugin from '@fullcalendar/icalendar'
 import "../../styles/Calendar.css"
 import {get, getServerUrl} from "../../util/rest";
 import IcsManagementModal from "./IcsManagementModal";
+import AddEventModal from "./AddEventModal";
 
 const updateIcsEventSources = (icsFiles, icsEventSourcesIds, setIcsEventSourcesIds, calendarApi, isPreview) => {
   if (!calendarApi) {
@@ -31,6 +32,7 @@ const updateIcsEventSources = (icsFiles, icsEventSourcesIds, setIcsEventSourcesI
 function Calendar({isPreview, previewIcsFiles}) {
   const calendarRef = useRef();
   const [showIcsManagementModal, setShowIcsManagementModal] = useState(false)
+  const [showAddEventModal, setShowAddEventModal] = useState(false)
   const [icsFiles, setIcsFiles] = useState([])
   const [icsEventSourcesIds, setIcsEventSourcesIds] = useState([]) // ids of ics files already added to calendar
 
@@ -71,10 +73,16 @@ function Calendar({isPreview, previewIcsFiles}) {
             click: () => {
               setShowIcsManagementModal(true)
             }
+          },
+          addEvent: isPreview ? undefined : {
+            text: 'Add +',
+            click: () => {
+              setShowAddEventModal(true)
+            }
           }
         }}
         headerToolbar={{
-          left: isPreview ? '' : 'manageIcs',
+          left: isPreview ? '' : 'addEvent manageIcs',
           right: 'prev,next today',
           center: 'title',
         }}
@@ -84,6 +92,10 @@ function Calendar({isPreview, previewIcsFiles}) {
         setShow={setShowIcsManagementModal}
         icsFiles={icsFiles}
         setIcsFiles={setIcsFiles}
+      />)}
+      {!isPreview && (<AddEventModal
+        show={showAddEventModal}
+        setShow={setShowAddEventModal}
       />)}
     </div>
   )
