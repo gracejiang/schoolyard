@@ -11,6 +11,7 @@ function Dashboard() {
         <li><a href="register">Register</a></li>
         <li><a href="login">Login</a></li>
         <li><a href="exchange">Exchange</a></li>
+        <li><a href="group">Group</a></li>
       </ul>
     </div>
   );

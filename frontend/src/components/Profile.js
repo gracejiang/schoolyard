@@ -1,55 +1,111 @@
 import '../styles/App.css'
+import { Button, Container, Col, Card } from "react-bootstrap";
 import React from 'react'
 import Calendar from './Calendar'
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Profile() {
   return (
     <div id="profile" className="wrapper">
-      <div className="profile-header">
-        <button className="settings-button">Settings</button>
-        <div className="bio-info-wrapper">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" className="profile-img" height="300px" width="300px" />
-          <div className="info-text-wrapper">
-            <h1 className="name-text">Carol Li</h1>
-            <h3 className="desc-text">
-              SEAS 2022
-              <br />
-              Computer and Information Science
-              <br />
-              <b>22</b>
-              {' '}
-              following
-            </h3>
+      <Container className="row">
+        <Card className="mb-3 border-light">
+        <div className="row g-0">
+          <div className="col-md-4">
+            <img src="https://i.scdn.co/image/ab67616d0000b2733555342d852cf4e8bd20933f" className="img-fluid rounded-start"></img>
+          </div>
+          <div className="col-md-8">
+            <div className="card-body">
+              <h1 className="card-title">Carol Li</h1>
+              <h4 className="card-text"><b>SEAS '22</b> | Computer and Information Science</h4>
+              <br/>
+              <h5 className='text-muted'>this is my bio : )</h5>
+              <br/>
+            </div>
           </div>
         </div>
-        <div className="bio">
-          <p>
-            Hi, I’m Carol. This is my short 100 word bio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec dui justo. Suspendisse pulvinar facilisis risus, et lacinia orci accumsan nec. Aenean sed odio in libero aliquet hendrerit. In vel tellus ut felis aliquet consequat.
-          </p>
+        <div class="card-footer bg-transparent border-light">
+          <h5><b>22</b> Following</h5>
         </div>
-      </div>
-      <div className="schedule">
-        <h2 className="profile-section-text">Schedule</h2>
-        <Calendar />
-      </div>
-      <div className="classes-section">
-        <h2 className="section-text">Classes</h2>
-        <div className="classes">
-          {/* TODO(caroljli): make into buttons */}
-          <p>CIS 400</p>
-          <p>CIS 400</p>
-          <p>CIS 400</p>
+        </Card>
+      </Container>
+      <Container className="row">
+        <div className="schedule">
+          <h2 className="profile-section-text">Schedule</h2>
+          <Calendar />
         </div>
-      </div>
-      <div className="groups-section">
-        <h2 className="section-text">Groups</h2>
-        <div className="groups">
-          {/* TODO(caroljli): make into buttons */}
-          <p>Hack4Impact</p>
-          <p>Hack4Impact</p>
-          <p>Hack4Impact</p>
+      </Container>
+      <br/>
+      <Container className="row">
+        <div className="classes-section">
+          <h2>Classes</h2>
+          <div className="classes">
+            <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">CIS 400</h5>
+                  <p className="card-text">CIS 400 is the beginning of a two-course "capstone" to your undergraduate Computer Science education in which you will have the opportunity to identify, plan, design, implement, and evaluate a computing-based solution to a real-world problem.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">CIS 400</h5>
+                  <p className="card-text">CIS 400 is the beginning of a two-course "capstone" to your undergraduate Computer Science education in which you will have the opportunity to identify, plan, design, implement, and evaluate a computing-based solution to a real-world problem.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">CIS 400</h5>
+                  <p className="card-text">CIS 400 is the beginning of a two-course "capstone" to your undergraduate Computer Science education in which you will have the opportunity to identify, plan, design, implement, and evaluate a computing-based solution to a real-world problem.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <div className="w-100"></div>
+          </div>
         </div>
-      </div>
+      </Container>
+      <br/>
+      <Container className="row">
+        <div className="groups-section">
+          <h2>Groups</h2>
+          <div className="groups">
+          <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">Hack4Impact</h5>
+                  <p className="card-text">Hack4Impact is a 501 (c)(3) nonprofit organization founded at the University of Pennsylvania in Philadelphia, with chapters at various colleges across the United States. We collaborate with nonprofits and other socially responsible organizations to develop software that meets important social and humanitarian needs.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">Hack4Impact</h5>
+                  <p className="card-text">Hack4Impact is a 501 (c)(3) nonprofit organization founded at the University of Pennsylvania in Philadelphia, with chapters at various colleges across the United States. We collaborate with nonprofits and other socially responsible organizations to develop software that meets important social and humanitarian needs.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <Col className='col'>
+              <Card>
+                <div className="card-body">
+                  <h5 className="card-title">Hack4Impact</h5>
+                  <p className="card-text">Hack4Impact is a 501 (c)(3) nonprofit organization founded at the University of Pennsylvania in Philadelphia, with chapters at various colleges across the United States. We collaborate with nonprofits and other socially responsible organizations to develop software that meets important social and humanitarian needs.</p>
+                  <a href="#" className="btn btn-dark">Course Page</a>
+                </div>
+              </Card>
+            </Col>
+            <div className="w-100"></div>
+          </div>
+        </div>
+      </Container>
     </div>
   )
 }

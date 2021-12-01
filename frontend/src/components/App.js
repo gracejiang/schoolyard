@@ -11,6 +11,7 @@ import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
 import ExchangePage from './ExchangePage'
+import Group from './Group'
 
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
           </Route>
           <Route exact path="/profile">
             <Profile />
+          </Route>
+          <Route exact path="/group">
+            <Group />
           </Route>
           <Route exact path="/register">
             <Register />
