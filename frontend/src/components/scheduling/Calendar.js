@@ -93,7 +93,7 @@ function Calendar({isPreview, previewIcsFiles}) {
         icsFiles={icsFiles}
         setIcsFiles={setIcsFiles}
       />)}
-      {!isPreview && (<AddEventModal
+      {!isPreview && (showAddEventModal && <AddEventModal
         show={showAddEventModal}
         setShow={setShowAddEventModal}
       />)}
