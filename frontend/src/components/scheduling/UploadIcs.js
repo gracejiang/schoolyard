@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
+import { Button } from 'react-bootstrap'
 import { post, getServerUrl } from '../../util/rest'
-import { Button } from "react-bootstrap";
 
-function UploadIcs({icsFiles, setIcsFiles}) {
+function UploadIcs({ icsFiles, setIcsFiles }) {
   const inputRef = useRef()
 
   const handleChange = e => {
@@ -14,7 +14,7 @@ function UploadIcs({icsFiles, setIcsFiles}) {
     formData.append('icsFile', icsFile)
     post('calendar/upload-ics', formData, res => {
       if (res?.data?.s3_ics_id) {
-        setIcsFiles([...icsFiles, {s3IcsId: res.data.s3_ics_id, icsName: res.data.ics_name}])
+        setIcsFiles([...icsFiles, { s3IcsId: res.data.s3_ics_id, icsName: res.data.ics_name }])
       }
     }, null, {
       'Content-Type': 'multipart/form-data',

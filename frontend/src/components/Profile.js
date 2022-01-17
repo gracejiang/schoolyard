@@ -1,31 +1,41 @@
 import '../styles/App.css'
-import { Button, Container, Col, Card } from "react-bootstrap";
+import {
+  Button, Container, Col, Card,
+} from 'react-bootstrap'
 import React from 'react'
 import Calendar from './scheduling/Calendar.js'
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Profile() {
   return (
     <div id="profile" className="wrapper">
       <Container className="row">
         <Card className="mb-3 border-light">
-        <div className="row g-0">
-          <div className="col-md-4">
-            <img src="https://i.scdn.co/image/ab67616d0000b2733555342d852cf4e8bd20933f" className="img-fluid rounded-start"></img>
-          </div>
-          <div className="col-md-8">
-            <div className="card-body">
-              <h1 className="card-title">Carol Li</h1>
-              <h4 className="card-text"><b>SEAS '22</b> | Computer and Information Science</h4>
-              <br/>
-              <h5 className='text-muted'>this is my bio : )</h5>
-              <br/>
+          <div className="row g-0">
+            <div className="col-md-4">
+              <img src="https://i.scdn.co/image/ab67616d0000b2733555342d852cf4e8bd20933f" className="img-fluid rounded-start" />
+            </div>
+            <div className="col-md-8">
+              <div className="card-body">
+                <h1 className="card-title">Carol Li</h1>
+                <h4 className="card-text">
+                  <b>SEAS '22</b>
+                  {' '}
+                  | Computer and Information Science
+                </h4>
+                <br />
+                <h5 className="text-muted">this is my bio : )</h5>
+                <br />
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-footer bg-transparent border-light">
-          <h5><b>22</b> Following</h5>
-        </div>
+          <div className="card-footer bg-transparent border-light">
+            <h5>
+              <b>22</b>
+              {' '}
+              Following
+            </h5>
+          </div>
         </Card>
       </Container>
       <Container className="row">
@@ -34,12 +44,12 @@ function Profile() {
           <Calendar />
         </div>
       </Container>
-      <br/>
+      <br />
       <Container className="row">
         <div className="classes-section">
           <h2>Classes</h2>
           <div className="classes">
-            <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">CIS 400</h5>
@@ -48,7 +58,7 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">CIS 400</h5>
@@ -57,7 +67,7 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">CIS 400</h5>
@@ -66,16 +76,16 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <div className="w-100"></div>
+            <div className="w-100" />
           </div>
         </div>
       </Container>
-      <br/>
+      <br />
       <Container className="row">
         <div className="groups-section">
           <h2>Groups</h2>
           <div className="groups">
-          <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">Hack4Impact</h5>
@@ -84,7 +94,7 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">Hack4Impact</h5>
@@ -93,7 +103,7 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <Col className='col'>
+            <Col className="col">
               <Card>
                 <div className="card-body">
                   <h5 className="card-title">Hack4Impact</h5>
@@ -102,7 +112,7 @@ function Profile() {
                 </div>
               </Card>
             </Col>
-            <div className="w-100"></div>
+            <div className="w-100" />
           </div>
         </div>
       </Container>

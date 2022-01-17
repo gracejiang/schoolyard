@@ -1,32 +1,33 @@
-import React, {useEffect, useState, useRef} from 'react'
-import { post } from '../../util/rest'
-import { Modal, Form, Button, ButtonGroup, ToggleButton, Col, Row } from "react-bootstrap";
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  Modal, Form, Button, ButtonGroup, ToggleButton, Col, Row,
+} from 'react-bootstrap'
 import DateTimePicker from 'react-datetime'
+import { post } from '../../util/rest'
 
-import "react-datetime/css/react-datetime.css";
+import 'react-datetime/css/react-datetime.css'
 
-
-function AddEventModal({show, setShow}) {
+function AddEventModal({ show, setShow }) {
   const startTimePicker = useRef()
   const endTimePicker = useRef()
   const startDatePicker = useRef()
   const endDatePicker = useRef()
 
-  const [title, setTitle] = useState("")
+  const [title, setTitle] = useState('')
   const [isFreeBlock, setIsFreeBlock] = useState(false)
   const [isAllDay, setIsAllDay] = useState(false)
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date(new Date().getTime() + 60 * 60 * 1000));
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date(new Date().getTime() + 60 * 60 * 1000))
 
   const [isRecurring, setIsRecurring] = useState(false)
   const [isEndless, setIsEndless] = useState(true)
-  const [startRecurDate, setStartRecurDate] = useState(new Date());
-  const [endRecurDate, setEndRecurDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
-  const [recurDays, setRecurDays] = useState([new Date().getDay()]);
+  const [startRecurDate, setStartRecurDate] = useState(new Date())
+  const [endRecurDate, setEndRecurDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+  const [recurDays, setRecurDays] = useState([new Date().getDay()])
 
-  const isDateInvalid = () => ((isRecurring &&
-    !(endDate?.getHours() > startDate?.getHours() ||
-      (endDate?.getHours() === startDate?.getHours() && endDate?.getMinutes() > startDate?.getMinutes())))
+  const isDateInvalid = () => ((isRecurring
+    && !(endDate?.getHours() > startDate?.getHours()
+      || (endDate?.getHours() === startDate?.getHours() && endDate?.getMinutes() > startDate?.getMinutes())))
     || (!isRecurring && endDate?.getTime() <= startDate?.getTime()))
   const isRecurDateInvalid = () => isRecurring && !isEndless && endRecurDate?.getTime() <= startRecurDate?.getTime()
   const isTitleInvalid = () => title.length >= 200
@@ -37,8 +38,8 @@ function AddEventModal({show, setShow}) {
       startDate.setMonth(endDate.getMonth())
       startDate.setFullYear(endDate.getFullYear())
     }
-    post("calendar/custom-event", {
-      title: title || "",
+    post('calendar/custom-event', {
+      title: title || '',
       isFreeBlock,
       isRecurring,
       isEndless,
@@ -73,7 +74,7 @@ function AddEventModal({show, setShow}) {
               <Form.Label>Title</Form.Label>
               <Form.Control
                 type="text"
-                placeholder={"(no title)"}
+                placeholder="(no title)"
                 isInvalid={isTitleInvalid()}
                 value={title}
                 onChange={e => setTitle(e.target.value)}
@@ -85,9 +86,9 @@ function AddEventModal({show, setShow}) {
             <Form.Group className="mb-3">
               <ButtonGroup>
                 <ToggleButton
-                  id='radio-event-busy'
+                  id="radio-event-busy"
                   type="radio"
-                  variant='outline-danger'
+                  variant="outline-danger"
                   name="radio-event"
                   value={false}
                   checked={!isFreeBlock}
@@ -96,11 +97,11 @@ function AddEventModal({show, setShow}) {
                   Busy
                 </ToggleButton>
                 <ToggleButton
-                  id='radio-event-free'
+                  id="radio-event-free"
                   type="radio"
-                  variant='outline-success'
+                  variant="outline-success"
                   name="radio-event"
-                  value={true}
+                  value
                   checked={isFreeBlock}
                   onChange={e => setIsFreeBlock(true)}
                 >
@@ -108,27 +109,27 @@ function AddEventModal({show, setShow}) {
                 </ToggleButton>
               </ButtonGroup>
               <Form.Text className="text-muted">
-                <br/>
+                <br />
                 Free time blocks indicate availability and override busy time blocks for scheduling purposes
               </Form.Text>
             </Form.Group>
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              id='is-recurring'
-              label='Is recurring?'
-              checked={isRecurring}
-              onChange={e => setIsRecurring(!isRecurring)}
-            />
-          </Form.Group>
-          {isRecurring && (
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                id="is-recurring"
+                label="Is recurring?"
+                checked={isRecurring}
+                onChange={e => setIsRecurring(!isRecurring)}
+              />
+            </Form.Group>
+            {isRecurring && (
             <Row className="mb-3">
-              <Col sm={1}/>
+              <Col sm={1} />
               <Col>
                 <Form.Check
                   type="checkbox"
-                  id='is-endless'
-                  label='Is recurring endlessly?'
+                  id="is-endless"
+                  label="Is recurring endlessly?"
                   checked={isEndless}
                   onChange={e => setIsEndless(!isEndless)}
                   className="mb-2 mt-1"
@@ -136,17 +137,23 @@ function AddEventModal({show, setShow}) {
                 <Row>
                   <Form.Group as={Col} className="mb-3">
                     <Form.Label>Start recurring event on:</Form.Label>
-                    <DateTimePicker timeFormat={false} value={startRecurDate}
-                                    onChange={date => setStartRecurDate(new Date(date))}/>
+                    <DateTimePicker
+                      timeFormat={false}
+                      value={startRecurDate}
+                      onChange={date => setStartRecurDate(new Date(date))}
+                    />
                   </Form.Group>
                   {!isEndless && (
                     <>
                       <Form.Group as={Col} className="mb-3">
                         <Form.Label>End recurring event on:</Form.Label>
-                        <DateTimePicker timeFormat={false} value={endRecurDate}
-                                        onChange={date => setEndRecurDate(new Date(date))}/>
+                        <DateTimePicker
+                          timeFormat={false}
+                          value={endRecurDate}
+                          onChange={date => setEndRecurDate(new Date(date))}
+                        />
                         {isRecurDateInvalid() && (
-                          <Form.Text style={{display: "block"}} className="invalid-feedback">
+                          <Form.Text style={{ display: 'block' }} className="invalid-feedback">
                             End recurring date must be after the start recurring date
                           </Form.Text>
                         )}
@@ -159,7 +166,7 @@ function AddEventModal({show, setShow}) {
                     Repeat weekly on
                   </Form.Label>
                 </Row>
-                {["S", "M", "T", "W", "T", "F", "S"].map((dayLabel, dayIdx) => (
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayLabel, dayIdx) => (
                   <Form.Check
                     key={dayIdx}
                     type="checkbox"
@@ -170,62 +177,72 @@ function AddEventModal({show, setShow}) {
                     disabled={recurDays.length === 1 && recurDays.indexOf(dayIdx) >= 0}
                     onChange={e => {
                       const idxInArr = recurDays.indexOf(dayIdx)
-                      let newRecurDays;
+                      let newRecurDays
                       if (idxInArr < 0) {
-                        newRecurDays = [...recurDays, dayIdx];
+                        newRecurDays = [...recurDays, dayIdx]
                       } else {
                         newRecurDays = recurDays.slice(0, idxInArr).concat(recurDays.slice(idxInArr + 1))
                       }
-                      setRecurDays(newRecurDays);
+                      setRecurDays(newRecurDays)
                     }}
                   />
                 ))}
               </Col>
             </Row>
-          )}
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              id='is-all-day'
-              label='Is all day?'
-              checked={isAllDay}
-              onChange={e => setIsAllDay(!isAllDay)}
-            />
-          </Form.Group>
-          {!isAllDay && (
+            )}
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                id="is-all-day"
+                label="Is all day?"
+                checked={isAllDay}
+                onChange={e => setIsAllDay(!isAllDay)}
+              />
+            </Form.Group>
+            {!isAllDay && (
             <>
               {(isRecurring && (
                 <>
                   <Form.Group className="mb-3">
                     <Form.Label>Start time</Form.Label>
-                    <DateTimePicker ref={startTimePicker} initialViewMode="time" dateFormat={false} value={startDate}
-                                    onChange={date => setStartDate(new Date(date))}/>
+                    <DateTimePicker
+                      ref={startTimePicker}
+                      initialViewMode="time"
+                      dateFormat={false}
+                      value={startDate}
+                      onChange={date => setStartDate(new Date(date))}
+                    />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>End time</Form.Label>
-                    <DateTimePicker ref={endTimePicker} initialViewMode="time" dateFormat={false} value={endDate}
-                                    onChange={date => setEndDate(new Date(date))}/>
+                    <DateTimePicker
+                      ref={endTimePicker}
+                      initialViewMode="time"
+                      dateFormat={false}
+                      value={endDate}
+                      onChange={date => setEndDate(new Date(date))}
+                    />
                   </Form.Group>
                 </>
               )) || (
                 <>
                   <Form.Group className="mb-3">
                     <Form.Label>Start</Form.Label>
-                    <DateTimePicker ref={startDatePicker} value={startDate} onChange={date => setStartDate(new Date(date))}/>
+                    <DateTimePicker ref={startDatePicker} value={startDate} onChange={date => setStartDate(new Date(date))} />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>End</Form.Label>
-                    <DateTimePicker ref={endDatePicker} value={endDate} onChange={date => setEndDate(new Date(date))}/>
+                    <DateTimePicker ref={endDatePicker} value={endDate} onChange={date => setEndDate(new Date(date))} />
                   </Form.Group>
                 </>
               )}
               {isDateInvalid() && (
-                <Form.Text style={{display: "block"}} className="invalid-feedback">
+                <Form.Text style={{ display: 'block' }} className="invalid-feedback">
                   End date must be after the start date
                 </Form.Text>
               )}
             </>
-          )}
+            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -234,7 +251,9 @@ function AddEventModal({show, setShow}) {
             variant="primary"
             disabled={isDateInvalid() || isRecurDateInvalid() || isTitleInvalid()}
             onClick={submit}
-          >Save changes</Button>
+          >
+            Save changes
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

@@ -27,17 +27,17 @@ export default function Login() {
   return (
     <div style={{ margin: '1em' }}>
       <h1>Log In</h1>
-      <Form onSubmit={(e) => handleLogin(e)}>
-        <Form.Group className='mb-3'>
+      <Form onSubmit={e => handleLogin(e)}>
+        <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
-          <Form.Control type='text' placeholder='Username' />
+          <Form.Control type="text" placeholder="Username" />
         </Form.Group>
 
-        <Form.Group className='mb-3'>
+        <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control type='password' placeholder='Password' />
+          <Form.Control type="password" placeholder="Password" />
         </Form.Group>
-        <Button variant='primary' type='submit'>
+        <Button variant="primary" type="submit">
           Submit
         </Button>
       </Form>

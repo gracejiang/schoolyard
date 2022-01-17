@@ -1,6 +1,8 @@
-import { InputGroup, Form, FormControl, Button } from "react-bootstrap";
-import Listing from "./Listing"
-import "../../styles/all-exchanges.css";
+import {
+  InputGroup, Form, FormControl, Button,
+} from 'react-bootstrap'
+import Listing from './Listing'
+import '../../styles/all-exchanges.css'
 
 function AllListings() {
   return (
@@ -13,7 +15,7 @@ function AllListings() {
             aria-label="Searchbox text"
             aria-describedby="basic-addon2"
           />
-          <Button variant="primary" id="button-addon2" >
+          <Button variant="primary" id="button-addon2">
             Search
           </Button>
         </InputGroup>
@@ -39,12 +41,12 @@ function AllListings() {
         </Form>
       </div>
       <div className="exchange-listings">
-          <Listing/>
-          <Listing/>
-          <Listing/>
+        <Listing />
+        <Listing />
+        <Listing />
       </div>
     </div>
-  );
+  )
 }
 
-export default AllListings;
+export default AllListings

@@ -1,13 +1,14 @@
-import { Card, Button, Badge } from "react-bootstrap";
+import { Card, Button, Badge } from 'react-bootstrap'
 
 function Listing() {
   return (
     <div className="listing">
       <Card>
-        <Card.Body style={{ padding: "30px" }}>
+        <Card.Body style={{ padding: '30px' }}>
           <div className="listing-their">
             <Card.Title>User1 is Offering</Card.Title>
-            <Badge pill bg="warning">Favor</Badge>{" "}
+            <Badge pill bg="warning">Favor</Badge>
+            {' '}
             <Card.Text>
               Some quick example text to build on the card title and make up the
               bulk of the card's content.
@@ -15,7 +16,8 @@ function Listing() {
           </div>
           <div className="listing-your">
             <Card.Title>User1 is Looking For</Card.Title>
-            <Badge pill bg="info">Item</Badge>{" "}
+            <Badge pill bg="info">Item</Badge>
+            {' '}
             <Badge pill bg="success">Money</Badge>
             <Card.Text>
               Some quick example text to build on the card title and make up the
@@ -37,7 +39,7 @@ function Listing() {
         </Card.Body>
       </Card>
     </div>
-  );
+  )
 }
 
-export default Listing;
+export default Listing
