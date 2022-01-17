@@ -70,7 +70,7 @@ router.post('/upload-ics', verifyJWT, async (req, res, next) => {
   const s3IcsId = uuid.v4()
   const userIcsFiles = await Ics.find({ username })
   if (userIcsFiles.length >= 10) {
-    return next("You cannot own more than 10 ICS files!")
+    return next('You cannot own more than 10 ICS files!')
   }
   try {
     await S3.putObject({
@@ -106,31 +106,31 @@ router.post('/custom-event', verifyJWT, async (req, res, next) => {
     endRecurDate,
     recurDays
   } = req.body
-  if (typeof title !== "string" || title.length >= 200) {
+  if (typeof title !== 'string' || title.length >= 200) {
     return next("The title must be a string and can't be longer than 200 characters!")
   }
   if (!isAllDay && (!(new Date(startDate).getTime()) || !(new Date(endDate).getTime()))) {
-    return next("Start and end dates must be valid values!")
+    return next('Start and end dates must be valid values!')
   }
   if (!isAllDay && new Date(startDate).getTime() >= new Date(endDate).getTime()) {
-    return next("End date must be after the start date!")
+    return next('End date must be after the start date!')
   }
   if (isRecurring && (!(new Date(startRecurDate).getTime()) || (!isEndless && !(new Date(endRecurDate).getTime())))) {
-    return next("Start and end recurring dates must be valid values!")
+    return next('Start and end recurring dates must be valid values!')
   }
   if (isRecurring && !isEndless && new Date(startRecurDate).getTime() >= new Date(endRecurDate).getTime()) {
-    return next("End recurring date must be after the start recurring date!")
+    return next('End recurring date must be after the start recurring date!')
   }
   if (isRecurring && (!recurDays ||
         recurDays.findIndex(val => [0, 1, 2, 3, 4, 5, 6].indexOf(val) < 0) >= 0 ||
         new Set(recurDays).size !== recurDays.length)) {
-    return next("Days on which the event is recurring must be a valid value!")
+    return next('Days on which the event is recurring must be a valid value!')
   }
 
   try {
     res.send(await CalCustomEvent.create({
       username,
-      title: title.length === 0 && "(no title)" || title,
+      title: title.length === 0 && '(no title)' || title,
       is_free_block: !!isFreeBlock,
       is_all_day: !!isAllDay,
       start_date: !isAllDay && new Date(startDate) || null,

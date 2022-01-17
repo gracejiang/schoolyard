@@ -1,13 +1,12 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import AllListings from "./exchange/AllListings";
-import YourListings from "./exchange/YourListings";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import {
   Tab,
   Tabs,
   Container,
-} from "react-bootstrap";
+} from 'react-bootstrap'
+import AllListings from './exchange/AllListings'
+import YourListings from './exchange/YourListings'
 
 function ExchangePage() {
   return (
@@ -19,16 +18,16 @@ function ExchangePage() {
           className="mb-3"
         >
           <Tab eventKey="all-listings" title="All Listings">
-            <AllListings></AllListings>
+            <AllListings />
           </Tab>
           <Tab eventKey="your-listings" title="Your Listings">
-            <YourListings></YourListings>
+            <YourListings />
           </Tab>
         </Tabs>
-        <div className="exchange-search-box"></div>
+        <div className="exchange-search-box" />
       </div>
     </Container>
-  );
+  )
 }
 
-export default ExchangePage;
+export default ExchangePage

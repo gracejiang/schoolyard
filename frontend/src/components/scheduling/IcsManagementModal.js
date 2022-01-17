@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { remove } from '../../util/rest'
-import { Modal, Table } from "react-bootstrap";
-import UploadIcs from "./UploadIcs";
+import { Modal, Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import Calendar from "./Calendar";
+import UploadIcs from './UploadIcs'
+import { remove } from '../../util/rest'
+import Calendar from './Calendar'
 
-function IcsManagementModal({show, setShow, icsFiles, setIcsFiles}) {
+function IcsManagementModal({
+  show, setShow, icsFiles, setIcsFiles,
+}) {
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [previewIcsFiles, setPreviewIcsFiles] = useState([])
   return (
@@ -16,34 +18,39 @@ function IcsManagementModal({show, setShow, icsFiles, setIcsFiles}) {
           <Modal.Title>iCal Files Management</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          iCal files in your calendar ({icsFiles.length}/10):
+          iCal files in your calendar (
+          {icsFiles.length}
+          /10):
           <Table striped bordered hover>
             <tbody>
-            {icsFiles.map(({icsName, s3IcsId}) => (
-              <tr key={s3IcsId}>
-                <td width="40px" align="center">
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    className="text-primary"
-                    style={{cursor: "pointer"}}
+              {icsFiles.map(({ icsName, s3IcsId }) => (
+                <tr key={s3IcsId}>
+                  <td width="40px" align="center">
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="text-primary"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+              remove(`calendar/ics/${s3IcsId}`, null, () => {
+                setIcsFiles(icsFiles.filter(icsFile => icsFile.s3IcsId !== s3IcsId))
+              })
+            }}
+                    />
+                  </td>
+                  <td
+                    style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      remove(`calendar/ics/${s3IcsId}`, null, () => {
-                        setIcsFiles(icsFiles.filter(icsFile => icsFile.s3IcsId !== s3IcsId))
-                      })
+                      setPreviewIcsFiles([{ icsName, s3IcsId }])
+                      setShowPreviewModal(true)
                     }}
-                  />
-                </td>
-                <td style={{cursor: "pointer"}} onClick={() => {
-                  setPreviewIcsFiles([{icsName, s3IcsId}])
-                  setShowPreviewModal(true)
-                }}>
-                  {icsName}
-                </td>
-              </tr>
-            ))}
+                  >
+                    {icsName}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
-          <UploadIcs icsFiles={icsFiles} setIcsFiles={setIcsFiles}/>
+          <UploadIcs icsFiles={icsFiles} setIcsFiles={setIcsFiles} />
         </Modal.Body>
       </Modal>
       <Modal size="lg" show={showPreviewModal} onHide={() => setShowPreviewModal(false)}>
@@ -51,7 +58,7 @@ function IcsManagementModal({show, setShow, icsFiles, setIcsFiles}) {
           <Modal.Title>iCal File Preview</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Calendar isPreview={true} previewIcsFiles={previewIcsFiles}/>
+          <Calendar isPreview previewIcsFiles={previewIcsFiles} />
         </Modal.Body>
       </Modal>
     </>
