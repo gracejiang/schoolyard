@@ -3,11 +3,11 @@ import {
   Modal, Form, Button, ButtonGroup, ToggleButton, Col, Row,
 } from 'react-bootstrap'
 import DateTimePicker from 'react-datetime'
-import { post } from '../../util/rest'
+import { post, remove } from '../../util/rest'
 
 import 'react-datetime/css/react-datetime.css'
 
-function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload }) {
+function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload, setEditingEvent, setEditedEvent }) {
   const timeClosest15Multiple = Math.ceil(new Date().getTime() / 15 / 60 / 1000) * 15 * 60 * 1000
   const startTimePicker = useRef()
   const endTimePicker = useRef()
@@ -17,8 +17,8 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
   const [title, setTitle] = useState(isEdit ? editedEvent.title : '')
   const [isFreeBlock, setIsFreeBlock] = useState(isEdit ? editedEvent.isFreeBlock : false)
   const [isAllDay] = useState(isEdit ? editedEvent.isAllDay : false)
-  const [startDate, setStartDate] = useState(isEdit ? new Date(editedEvent.startDate) : new Date(timeClosest15Multiple))
-  const [endDate, setEndDate] = useState(isEdit ? new Date(editedEvent.endDate) : new Date(timeClosest15Multiple + 60 * 60 * 1000))
+  const [startDate, setStartDate] = useState(editedEvent?.startDate ? new Date(editedEvent.startDate) : new Date(timeClosest15Multiple))
+  const [endDate, setEndDate] = useState(editedEvent?.endDate ? new Date(editedEvent.endDate) : new Date(timeClosest15Multiple + 60 * 60 * 1000))
 
   const [isRecurring, setIsRecurring] = useState(isEdit ? editedEvent.isRecurring : false)
   const [isEndless, setIsEndless] = useState(isEdit ? editedEvent.isEndless : true)
@@ -34,6 +34,20 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
     || (!isRecurring && endDate?.getTime() <= startDate?.getTime()))
   const isRecurDateInvalid = () => isRecurring && !isEndless && endRecurDate?.getTime() <= startRecurDate?.getTime()
   const isTitleInvalid = () => title.length >= 200
+
+  const close = () => {
+    setEditingEvent(false)
+    setEditedEvent(null)
+    setShow(false)
+  }
+
+  const removeEvent = () => {
+    remove(`calendar/custom-event/${editedEvent.id}`, null, () => {
+      const idx = customEvents.findIndex(ev => ev.id === editedEvent.id)
+      setCustomEvents(customEvents.slice(0, idx).concat(customEvents.slice(idx + 1)))
+      close()
+    })
+  }
 
   const submit = () => {
     if (isRecurring) {
@@ -54,13 +68,14 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
       recurDays,
       id: isEdit ? editedEvent.id : null,
     }, result => {
+      let newCustomEvents = customEvents
       if (isEdit) {
         const idx = customEvents.findIndex(ev => ev.id === editedEvent.id)
-        const newCustomEvents = customEvents.slice(0, idx).concat(customEvents.slice(idx + 1))
+        newCustomEvents = customEvents.slice(0, idx).concat(customEvents.slice(idx + 1))
         setCustomEvents(newCustomEvents)
-        setCustomEvents([...newCustomEvents, parseCustomEventPayload(result.data)])
       }
-      setShow(false)
+      setCustomEvents([...newCustomEvents, parseCustomEventPayload(result.data)])
+      close()
     })
   }
 
@@ -76,7 +91,7 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
 
   return (
     <>
-      <Modal show={show} onHide={() => setShow(false)}>
+      <Modal show={show} onHide={() => close()}>
         <Modal.Header closeButton>
           <Modal.Title>{!isEdit ? `Add new ` : `Edit the `}time block</Modal.Title>
         </Modal.Header>
@@ -249,7 +264,11 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>Close</Button>
+          {isEdit && (<>
+            <button type="button" className="btn btn-danger" onClick={removeEvent}>Remove</button>
+            <div style={{flex: 1}}/>
+          </>)}
+          <Button variant="secondary" onClick={() => close()}>Close</Button>
           <Button
             variant="primary"
             disabled={isDateInvalid() || isRecurDateInvalid() || isTitleInvalid()}

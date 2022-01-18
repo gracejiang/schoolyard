@@ -142,9 +142,16 @@ function Calendar({ isPreview, previewIcsFiles }) {
         editable
         contentHeight={600}
         nowIndicator
+        selectable
         scrollTime="08:00:00"
         scrollTimeReset={false}
         allDaySlot={false}
+        select={info => {
+          info.jsEvent.preventDefault() // don't let the browser navigate
+          calendarRef?.current?.getApi()?.unselect()
+          setEditedEvent({startDate: info.start, endDate: info.end})
+          setShowAddEventModal(true)
+        }}
         eventClick={info => {
           info.jsEvent.preventDefault(); // don't let the browser navigate
           if (!showAddEventModal && info.event.extendedProps.isCustomEvent) {
@@ -158,7 +165,7 @@ function Calendar({ isPreview, previewIcsFiles }) {
           const startTimeDiff = info.event.start.getTime() - info.oldEvent.start.getTime()
           const endTimeDiff = info.event.end.getTime() - info.oldEvent.end.getTime()
           const daysDragged = info.event.start.getDay() - info.oldEvent.start.getDay()
-          if (!ev || eventEditPending || info.event.end.getDay() - info.oldEvent.end.getDay() !== daysDragged) {
+          if (!ev || eventEditPending || (ev.isRecurring && info.event.end.getDay() - info.oldEvent.end.getDay() !== daysDragged)) {
             info.revert()
             return
           }
@@ -219,6 +226,8 @@ function Calendar({ isPreview, previewIcsFiles }) {
         customEvents={customEvents}
         setCustomEvents={setCustomEvents}
         parseCustomEventPayload={parseCustomEventPayload}
+        setEditingEvent={setEditingEvent}
+        setEditedEvent={setEditedEvent}
       />
       ))}
     </div>

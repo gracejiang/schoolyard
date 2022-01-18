@@ -164,4 +164,21 @@ router.get('/custom-events', verifyJWT, async (req, res, next) => {
   }
 })
 
+router.delete('/custom-event/:eventId', verifyJWT, async (req, res, next) => {
+  const { eventId } = req.params
+  const username = req.user?.username
+  try {
+    // authenticate that this event belongs to this user
+    const userEvent = await CalCustomEvent.findOne({ username, _id: eventId })
+    if (!userEvent) {
+      return next("You don't own such event!")
+    }
+
+    await CalCustomEvent.deleteOne({ username, _id: eventId })
+    return res.json({success: true})
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
