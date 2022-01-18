@@ -104,15 +104,16 @@ router.post('/custom-event', verifyJWT, async (req, res, next) => {
     isEndless,
     startRecurDate,
     endRecurDate,
-    recurDays
+    recurDays,
+    id,
   } = req.body
   if (typeof title !== 'string' || title.length >= 200) {
     return next("The title must be a string and can't be longer than 200 characters!")
   }
-  if (!isAllDay && (!(new Date(startDate).getTime()) || !(new Date(endDate).getTime()))) {
+  if (!(new Date(startDate).getTime()) || !(new Date(endDate).getTime())) {
     return next('Start and end dates must be valid values!')
   }
-  if (!isAllDay && new Date(startDate).getTime() >= new Date(endDate).getTime()) {
+  if (new Date(startDate).getTime() >= new Date(endDate).getTime()) {
     return next('End date must be after the start date!')
   }
   if (isRecurring && (!(new Date(startRecurDate).getTime()) || (!isEndless && !(new Date(endRecurDate).getTime())))) {
@@ -123,24 +124,58 @@ router.post('/custom-event', verifyJWT, async (req, res, next) => {
   }
   if (isRecurring && (!recurDays ||
         recurDays.findIndex(val => [0, 1, 2, 3, 4, 5, 6].indexOf(val) < 0) >= 0 ||
-        new Set(recurDays).size !== recurDays.length)) {
+        new Set(recurDays).size !== recurDays.length || recurDays.length === 0)) {
     return next('Days on which the event is recurring must be a valid value!')
   }
 
   try {
-    res.send(await CalCustomEvent.create({
+    let response
+    const updateData = {
       username,
       title: title.length === 0 && '(no title)' || title,
       is_free_block: !!isFreeBlock,
-      is_all_day: !!isAllDay,
-      start_date: !isAllDay && new Date(startDate) || null,
-      end_date: !isAllDay && new Date(endDate) || null,
+      start_date: new Date(startDate),
+      end_date: new Date(endDate),
       is_recurring: !!isRecurring,
       is_endless: !!isEndless,
       recur_start_date: isRecurring && new Date(startRecurDate) || null,
       recur_end_date: isRecurring && new Date(endRecurDate) || null,
       recur_days: isRecurring && recurDays || null,
-    }))
+    }
+    if (id) { // edit
+      response = await CalCustomEvent.findOneAndUpdate({username, _id: id}, updateData, {
+        new: true
+      });
+    } else { // new
+      response = await CalCustomEvent.create(updateData)
+    }
+    res.send(response)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/custom-events', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
+  try {
+    res.send((await CalCustomEvent.find({ username })))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/custom-event/:eventId', verifyJWT, async (req, res, next) => {
+  const { eventId } = req.params
+  const username = req.user?.username
+  try {
+    // authenticate that this event belongs to this user
+    const userEvent = await CalCustomEvent.findOne({ username, _id: eventId })
+    if (!userEvent) {
+      return next("You don't own such event!")
+    }
+
+    await CalCustomEvent.deleteOne({ username, _id: eventId })
+    return res.json({success: true})
   } catch (err) {
     next(err)
   }
