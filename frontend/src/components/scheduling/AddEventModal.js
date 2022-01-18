@@ -7,23 +7,26 @@ import { post } from '../../util/rest'
 
 import 'react-datetime/css/react-datetime.css'
 
-function AddEventModal({ show, setShow }) {
+function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload }) {
+  const timeClosest15Multiple = Math.ceil(new Date().getTime() / 15 / 60 / 1000) * 15 * 60 * 1000
   const startTimePicker = useRef()
   const endTimePicker = useRef()
   const startDatePicker = useRef()
   const endDatePicker = useRef()
 
-  const [title, setTitle] = useState('')
-  const [isFreeBlock, setIsFreeBlock] = useState(false)
-  const [isAllDay, setIsAllDay] = useState(false)
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date(new Date().getTime() + 60 * 60 * 1000))
+  const [title, setTitle] = useState(isEdit ? editedEvent.title : '')
+  const [isFreeBlock, setIsFreeBlock] = useState(isEdit ? editedEvent.isFreeBlock : false)
+  const [isAllDay] = useState(isEdit ? editedEvent.isAllDay : false)
+  const [startDate, setStartDate] = useState(isEdit ? new Date(editedEvent.startDate) : new Date(timeClosest15Multiple))
+  const [endDate, setEndDate] = useState(isEdit ? new Date(editedEvent.endDate) : new Date(timeClosest15Multiple + 60 * 60 * 1000))
 
-  const [isRecurring, setIsRecurring] = useState(false)
-  const [isEndless, setIsEndless] = useState(true)
-  const [startRecurDate, setStartRecurDate] = useState(new Date())
-  const [endRecurDate, setEndRecurDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
-  const [recurDays, setRecurDays] = useState([new Date().getDay()])
+  const [isRecurring, setIsRecurring] = useState(isEdit ? editedEvent.isRecurring : false)
+  const [isEndless, setIsEndless] = useState(isEdit ? editedEvent.isEndless : true)
+  const [startRecurDate, setStartRecurDate] = useState(isEdit && editedEvent.isRecurring ?
+    new Date(editedEvent.recurStartDate) : new Date())
+  const [endRecurDate, setEndRecurDate] = useState(isEdit && editedEvent.isRecurring && !editedEvent.isEndless ?
+    new Date(editedEvent.recurEndDate) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+  const [recurDays, setRecurDays] = useState(isEdit && editedEvent.isRecurring ? editedEvent.recurDays : [new Date().getDay()])
 
   const isDateInvalid = () => ((isRecurring
     && !(endDate?.getHours() > startDate?.getHours()
@@ -49,7 +52,16 @@ function AddEventModal({ show, setShow }) {
       startRecurDate,
       endRecurDate,
       recurDays,
-    }, () => setShow(false))
+      id: isEdit ? editedEvent.id : null,
+    }, result => {
+      if (isEdit) {
+        const idx = customEvents.findIndex(ev => ev.id === editedEvent.id)
+        const newCustomEvents = customEvents.slice(0, idx).concat(customEvents.slice(idx + 1))
+        setCustomEvents(newCustomEvents)
+        setCustomEvents([...newCustomEvents, parseCustomEventPayload(result.data)])
+      }
+      setShow(false)
+    })
   }
 
   useEffect(() => {
@@ -66,7 +78,7 @@ function AddEventModal({ show, setShow }) {
     <>
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Add new time block</Modal.Title>
+          <Modal.Title>{!isEdit ? `Add new ` : `Edit the `}time block</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -190,15 +202,6 @@ function AddEventModal({ show, setShow }) {
               </Col>
             </Row>
             )}
-            <Form.Group>
-              <Form.Check
-                type="checkbox"
-                id="is-all-day"
-                label="Is all day?"
-                checked={isAllDay}
-                onChange={e => setIsAllDay(!isAllDay)}
-              />
-            </Form.Group>
             {!isAllDay && (
             <>
               {(isRecurring && (
