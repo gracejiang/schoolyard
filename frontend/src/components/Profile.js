@@ -19,7 +19,7 @@ class Profile extends Component {
     axios
     .get("/user/profile/caroljli") // TODO: replace caroljli with username
     .then(result => {
-      this.setState({ user: result.data.data })
+      this.setState({ user: result.data })
     })
   }
 
