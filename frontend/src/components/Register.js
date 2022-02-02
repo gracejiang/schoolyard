@@ -22,6 +22,7 @@ export default function Register() {
       school_affiliation: form[5].value,
       major: form[6].value,
       bio: form[7].value,
+      profile_photo: form[8].value,
     }
 
     post('user/register', user, () => alert('Success!'))
@@ -75,6 +76,11 @@ export default function Register() {
         <Form.Group className="mb-3">
           <Form.Label>Bio</Form.Label>
           <Form.Control type="text" placeholder="Write bio here." />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Profile Photo Link</Form.Label>
+          <Form.Control type="text" placeholder="Link here." />
         </Form.Group>
 
         <Button variant="primary" type="submit">

@@ -17,7 +17,7 @@ class Profile extends Component {
 
   componentDidMount = () => {
     axios
-    .get("/user/profile/caroljli") // TODO: replace caroljli with username
+    .get("/user/profile", { username: username }) // TODO: how to get username? (placeholder)
     .then(result => {
       this.setState({ user: result.data })
     })
@@ -30,7 +30,7 @@ class Profile extends Component {
           <Card className="mb-3 border-light">
             <div className="row g-0">
               <div className="col-md-4">
-                <img src="https://i.scdn.co/image/ab67616d0000b2733555342d852cf4e8bd20933f" className="img-fluid rounded-start" />
+                <img src={ this.state.user.profile_photo } />
               </div>
               <div className="col-md-8">
                 <div className="card-body">

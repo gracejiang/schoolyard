@@ -70,8 +70,8 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.get('/profile/:username', (req, res, next) => {
-    const username = req.params
+router.get('/profile', (req, res) => {
+    const username = req.body.username;
     User.findOne({ username: username }, (err, data) => {
         if (!err) {
             res.json( { data: res })
