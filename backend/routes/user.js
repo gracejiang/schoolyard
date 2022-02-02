@@ -72,12 +72,24 @@ router.post('/login', (req, res, next) => {
 
 router.get('/profile/:username', (req, res, next) => {
     const username = req.params
-    User.findOne({ username: username }).then(dbUser => {
-        if (!dbUser) {
-            return next('User not found')
+    User.findOne({ username: username }, (err, data) => {
+        if (!err) {
+            res.json( { data: res })
+        } else {
+            res.json( {
+                error: err,
+                data: null
+            })
         }
-        res.send(dbUser)
     })
+})
+
+router.post("/followUser", (req, res) => {
+    // TODO
+})
+
+router.post("/unfollowUser", (req, res) => {
+    // TODO
 })
 
 module.exports = router
