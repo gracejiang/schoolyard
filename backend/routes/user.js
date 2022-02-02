@@ -71,15 +71,7 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/profile', (req, res, next) => {
-    // const { token } = req.params
     res.send(req.user)
-
-    // const username = req.user?.username;
-    // try {
-    //     res.send((User.findOne({ username: username })))
-    // } catch (err) {
-    //     next(err)
-    // }
 })
 
 /**

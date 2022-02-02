@@ -23,6 +23,30 @@ class Profile extends Component {
     })
   }
 
+  printAllFollowers = (followers) => {
+    followers = this.state.user.followers
+    let gridValues = []
+    if (Array.isArray(followers)) {
+      followers.forEach((i, index) => {
+          gridValues.push(this.listFollower(i))
+      })
+    } else {
+        return(<p>none</p>)
+    }
+    return gridValues
+  }
+
+  listFollower = (follower) => {
+    return (
+      <div><p>{ follower.username }</p></div>
+    )
+  }
+
+  followUser = () => {
+    axios.post('/user/followUser', { followUser = this.state.user.username })
+    // FIXME: modify for each individual user profile later
+  }
+
   render() {
     return (
       <div id="profile" className="wrapper">
@@ -34,7 +58,7 @@ class Profile extends Component {
               </div>
               <div className="col-md-8">
                 <div className="card-body">
-                <h1 className="card-title">{ this.state.user.first_name } " " { this.state.user.last_name }</h1>
+                <h1 className="card-title">{ this.state.user.first_name } { this.state.user.last_name }</h1>
                   <h4 className="card-text">
                     <b>{ this.state.user.school }</b>
                     {' '}
@@ -47,11 +71,13 @@ class Profile extends Component {
               </div>
             </div>
             <div className="card-footer bg-transparent border-light">
+              <Button variant="secondary" onClick={ followUser }>Follow</Button>{' '}
               <h5>
-                <b>22</b>
+                <b>{ this.state.user.followers.length }</b>
                 {' '}
-                Following
+                followers
               </h5>
+              { this.printAllFollowers(this.state.user.followers) }
             </div>
           </Card>
         </Container>
