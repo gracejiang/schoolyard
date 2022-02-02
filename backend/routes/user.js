@@ -84,12 +84,43 @@ router.get('/profile/:username', (req, res, next) => {
     })
 })
 
+/**
+ * requires followeruser and username in the axios post
+ */
 router.post("/followUser", (req, res) => {
-    // TODO
+    const currUser = req.body.username;
+    const followerUser = req.body.followUser;
+
+    User.findOne({ username: currUser }).then( user => {
+        if (!user) {
+            // User doesn't exist
+            return res.status(400).json( { username: "User not found" });
+        } else {
+            user.followers.push({ username: followerUser })
+            user.save().then( user => { 
+                console.log("Followed user successfully")
+                res.json(user)
+            }).catch(err => console.log(err));
+        }
+    })
 })
 
 router.post("/unfollowUser", (req, res) => {
-    // TODO
+    const currUser = req.body.username;
+    const followerUser = req.body.followUser;
+
+    User.findOne({ username: currUser }).then( user => {
+        if (!user) {
+            // User doesn't exist
+            return res.status(400).json( { username: "User not found" });
+        } else {
+            user.followers.pull({ username: followerUser })
+            user.save().then( user => { 
+                console.log("Unfollowed user successfully")
+                res.json(user)
+            }).catch(err => console.log(err));
+        }
+    })
 })
 
 module.exports = router
