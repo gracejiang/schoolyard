@@ -11,8 +11,8 @@ const userSchema = new Schema(
     major: { type: String, required: true },
     bio: { type: String, required: true },
     profile_photo: { type: String, required: true },
-    following: { type: [{ username: { type: String, required: true } } ] }, 
-    followers: { type: [{ username: { type: String, required: true } } ] },
+    following: { type: [ { username: { type: String, required: true } } ] }, 
+    followers: { type: [ { username: { type: String, required: true } } ] },
   },
   { timestamps: true }
 )

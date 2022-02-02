@@ -71,19 +71,22 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/profile', (req, res, next) => {
-    const username = req.user?.username;
-    try {
-        res.send((await User.findOne({ username: username })))
-    } catch (err) {
-        next(err)
-    }
+    // const { token } = req.params
+    res.send(req.user)
+
+    // const username = req.user?.username;
+    // try {
+    //     res.send((User.findOne({ username: username })))
+    // } catch (err) {
+    //     next(err)
+    // }
 })
 
 /**
- * requires followeruser and username in the axios post
+ * requires followeruser in the axios post
  */
 router.post("/followUser", (req, res) => {
-    const currUser = req.body.username;
+    const currUser = req.user?.username;
     const followerUser = req.body.followUser;
 
     User.findOne({ username: currUser }).then( user => {
@@ -101,7 +104,7 @@ router.post("/followUser", (req, res) => {
 })
 
 router.post("/unfollowUser", (req, res) => {
-    const currUser = req.body.username;
+    const currUser = req.user?.username;
     const followerUser = req.body.followUser;
 
     User.findOne({ username: currUser }).then( user => {

@@ -17,9 +17,9 @@ class Profile extends Component {
 
   componentDidMount = () => {
     axios
-    .get("/user/profile", { username: username }) // TODO: how to get username? (placeholder)
+    .get("/user/profile")
     .then(result => {
-      this.setState({ user: result.data })
+      this.setState({ user: result?.data })
     })
   }
 
