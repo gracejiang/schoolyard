@@ -31,10 +31,10 @@ function IcsManagementModal({
                       className="text-primary"
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
-              remove(`calendar/ics/${s3IcsId}`, null, () => {
-                setIcsFiles(icsFiles.filter(icsFile => icsFile.s3IcsId !== s3IcsId))
-              })
-            }}
+                        remove(`calendar/ics/${s3IcsId}`, null, () => {
+                          setIcsFiles(icsFiles.filter(icsFile => icsFile.s3IcsId !== s3IcsId))
+                        })
+                      }}
                     />
                   </td>
                   <td

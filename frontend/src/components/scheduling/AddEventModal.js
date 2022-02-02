@@ -7,7 +7,9 @@ import { post, remove } from '../../util/rest'
 
 import 'react-datetime/css/react-datetime.css'
 
-function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload, setEditingEvent, setEditedEvent }) {
+function AddEventModal({
+  show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload, setEditingEvent, setEditedEvent,
+}) {
   const timeClosest15Multiple = Math.ceil(new Date().getTime() / 15 / 60 / 1000) * 15 * 60 * 1000
   const startTimePicker = useRef()
   const endTimePicker = useRef()
@@ -22,10 +24,10 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
 
   const [isRecurring, setIsRecurring] = useState(isEdit ? editedEvent.isRecurring : false)
   const [isEndless, setIsEndless] = useState(isEdit ? editedEvent.isEndless : true)
-  const [startRecurDate, setStartRecurDate] = useState(isEdit && editedEvent.isRecurring ?
-    new Date(editedEvent.recurStartDate) : new Date())
-  const [endRecurDate, setEndRecurDate] = useState(isEdit && editedEvent.isRecurring && !editedEvent.isEndless ?
-    new Date(editedEvent.recurEndDate) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+  const [startRecurDate, setStartRecurDate] = useState(isEdit && editedEvent.isRecurring
+    ? new Date(editedEvent.recurStartDate) : new Date())
+  const [endRecurDate, setEndRecurDate] = useState(isEdit && editedEvent.isRecurring && !editedEvent.isEndless
+    ? new Date(editedEvent.recurEndDate) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
   const [recurDays, setRecurDays] = useState(isEdit && editedEvent.isRecurring ? editedEvent.recurDays : [new Date().getDay()])
 
   const isDateInvalid = () => ((isRecurring
@@ -93,7 +95,10 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
     <>
       <Modal show={show} onHide={() => close()}>
         <Modal.Header closeButton>
-          <Modal.Title>{!isEdit ? `Add new ` : `Edit the `}time block</Modal.Title>
+          <Modal.Title>
+            {!isEdit ? 'Add new ' : 'Edit the '}
+            time block
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -264,10 +269,12 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          {isEdit && (<>
+          {isEdit && (
+          <>
             <button type="button" className="btn btn-danger" onClick={removeEvent}>Remove</button>
-            <div style={{flex: 1}}/>
-          </>)}
+            <div style={{ flex: 1 }} />
+          </>
+          )}
           <Button variant="secondary" onClick={() => close()}>Close</Button>
           <Button
             variant="primary"

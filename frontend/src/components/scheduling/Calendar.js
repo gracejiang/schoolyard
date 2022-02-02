@@ -4,22 +4,21 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import '../../styles/Calendar.css'
-import {get, getServerUrl, post} from '../../util/rest'
+import { get, getServerUrl, post } from '../../util/rest'
 import IcsManagementModal from './IcsManagementModal'
 import AddEventModal from './AddEventModal'
-
 
 const updateCustomEvents = (customEvents, customEventsIds, setCustomEventsIds, calendarApi) => {
   if (!calendarApi) {
     return
   }
   const eventsToAdd = customEvents.filter(({ id }) => !customEventsIds.find(calendarEventId => calendarEventId === id))
-  const eventsToRemove = customEventsIds.filter(calendarEventId  => !customEvents.find(customEvent => customEvent.id === calendarEventId ))
+  const eventsToRemove = customEventsIds.filter(calendarEventId => !customEvents.find(customEvent => customEvent.id === calendarEventId))
   for (const eventToAdd of eventsToAdd) {
     const eventObject = {
       id: eventToAdd.id,
-      color: eventToAdd.isFreeBlock ? "green" : "purple",
-//      allDay: eventToAdd.isAllDay,
+      color: eventToAdd.isFreeBlock ? 'green' : 'purple',
+      //      allDay: eventToAdd.isAllDay,
       title: eventToAdd.title,
       isCustomEvent: true,
     }
@@ -78,29 +77,29 @@ function Calendar({ isPreview, previewIcsFiles }) {
   const [eventEditPending, setEventEditPending] = useState(false)
 
   const parseCustomEventPayload = ({
-     end_date,
-     is_all_day,
-     is_endless,
-     is_free_block,
-     is_recurring,
-     recur_days,
-     recur_end_date,
-     recur_start_date,
-     start_date,
-     title,
-     _id
-    }) => ({
-      id: _id,
-      title,
-      startDate: start_date,
-      endDate: end_date,
-      isAllDay: is_all_day,
-      isFreeBlock: is_free_block,
-      isRecurring: is_recurring,
-      isEndless: is_endless,
-      recurDays: recur_days,
-      recurEndDate: recur_end_date,
-      recurStartDate: recur_start_date,
+    end_date,
+    is_all_day,
+    is_endless,
+    is_free_block,
+    is_recurring,
+    recur_days,
+    recur_end_date,
+    recur_start_date,
+    start_date,
+    title,
+    _id,
+  }) => ({
+    id: _id,
+    title,
+    startDate: start_date,
+    endDate: end_date,
+    isAllDay: is_all_day,
+    isFreeBlock: is_free_block,
+    isRecurring: is_recurring,
+    isEndless: is_endless,
+    recurDays: recur_days,
+    recurEndDate: recur_end_date,
+    recurStartDate: recur_start_date,
   })
 
   useEffect(() => {
@@ -149,11 +148,11 @@ function Calendar({ isPreview, previewIcsFiles }) {
         select={info => {
           info.jsEvent.preventDefault() // don't let the browser navigate
           calendarRef?.current?.getApi()?.unselect()
-          setEditedEvent({startDate: info.start, endDate: info.end})
+          setEditedEvent({ startDate: info.start, endDate: info.end })
           setShowAddEventModal(true)
         }}
         eventClick={info => {
-          info.jsEvent.preventDefault(); // don't let the browser navigate
+          info.jsEvent.preventDefault() // don't let the browser navigate
           if (!showAddEventModal && info.event.extendedProps.isCustomEvent) {
             setEditedEvent(customEvents.find(ev => ev.id === info.event.id))
             setEditingEvent(true)
@@ -181,7 +180,7 @@ function Calendar({ isPreview, previewIcsFiles }) {
             endDate: !ev.isAllDay && ev.endDate ? new Date(new Date(ev.endDate).getTime() + endTimeDiff) : null,
             startRecurDate: ev.isRecurring && ev.recurStartDate ? new Date(new Date(ev.recurStartDate).getTime() + startTimeDiff) : null,
             endRecurDate: ev.isRecurring && !ev.isEndless && ev.recurEndDate ? new Date(new Date(ev.recurEndDate).getTime() + endTimeDiff) : null,
-            recurDays: ev.recurDays?.map(day => ((day + daysDragged) % 7) < 0 ? 7 + ((day + daysDragged) % 7) : ((day + daysDragged) % 7)),
+            recurDays: ev.recurDays?.map(day => (((day + daysDragged) % 7) < 0 ? 7 + ((day + daysDragged) % 7) : ((day + daysDragged) % 7))),
             id: ev.id,
           }, result => {
             const idx = customEvents.findIndex(ev => ev.id === info?.event?.id)
