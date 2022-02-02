@@ -70,18 +70,13 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.get('/profile', (req, res) => {
-    const username = req.body.username;
-    User.findOne({ username: username }, (err, data) => {
-        if (!err) {
-            res.json( { data: res })
-        } else {
-            res.json( {
-                error: err,
-                data: null
-            })
-        }
-    })
+router.get('/profile', (req, res, next) => {
+    const username = req.user?.username;
+    try {
+        res.send((await User.findOne({ username: username })))
+    } catch (err) {
+        next(err)
+    }
 })
 
 /**
