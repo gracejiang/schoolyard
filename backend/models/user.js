@@ -10,7 +10,8 @@ const userSchema = new Schema(
     school_affiiation: { type: String, required: true },
     major: { type: String, required: true },
     bio: { type: String, required: true },
-    // TODO(caroljli): create followers/following arrays
+    following: { type: [{ username: { type: String, required: true } } ] }, 
+    followers: { type: [{ username: { type: String, required: true } } ] },
   },
   { timestamps: true }
 )
