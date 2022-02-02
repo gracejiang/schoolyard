@@ -17,7 +17,7 @@ class Profile extends Component {
 
   componentDidMount = () => {
     axios
-    .get("/user/profile/caroljli")
+    .get("/user/profile/caroljli") // TODO: replace caroljli with username
     .then(result => {
       this.setState({ user: result.data.data })
     })
