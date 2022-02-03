@@ -61,26 +61,31 @@ export default function Classes() {
           .filter((c) => c.num_sections > 0)
           .slice(0, 24)
           .map((c) => (
-            <Card className='class-card'>
-              <Card.Body>
-                <div className='class-card-header'>
-                  <div>
-                    <Card.Title>
-                      <strong>{c.id.replace('-', ' ')}</strong>
-                    </Card.Title>{' '}
-                    <Card.Subtitle className='class-title'>
-                      {c.title}
-                    </Card.Subtitle>
+            <a
+              style={{ color: 'black', textDecoration: 'none' }}
+              href='class-dashboard'
+            >
+              <Card className='class-card'>
+                <Card.Body>
+                  <div className='class-card-header'>
+                    <div>
+                      <Card.Title>
+                        <strong>{c.id.replace('-', ' ')}</strong>
+                      </Card.Title>{' '}
+                      <Card.Subtitle className='class-title'>
+                        {c.title}
+                      </Card.Subtitle>
+                    </div>
+                    <div>
+                      <Button size='sm'>Join</Button>
+                    </div>
                   </div>
-                  <div>
-                    <Button size='sm'>Join</Button>
-                  </div>
-                </div>
-                <Card.Text className='mb-2 text-muted class-preview'>
-                  {c.description}
-                </Card.Text>
-              </Card.Body>
-            </Card>
+                  <Card.Text className='mb-2 text-muted class-preview'>
+                    {c.description}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </a>
           ))}
       </div>
     </div>
