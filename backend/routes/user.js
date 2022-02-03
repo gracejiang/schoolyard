@@ -75,7 +75,7 @@ router.get('/profile', (req, res, next) => {
 })
 
 /**
- * requires followeruser in the axios post
+ * requires followuser in the axios post
  */
 router.post("/followUser", (req, res) => {
     const currUser = req.user?.username;
