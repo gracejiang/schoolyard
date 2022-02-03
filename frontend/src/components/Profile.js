@@ -54,10 +54,10 @@ class Profile extends Component {
     )
   }
 
-  followUser = () => {
-    post('user/followUser', { followUser = this.state.user.username })
-    // FIXME: modify for each individual user profile later
-  }
+  // followUser = () => {
+  //   post('user/followUser', { followUser = this.state.user.username })
+  //   // FIXME: modify for each individual user profile later
+  // }
 
   render() {
     return (
