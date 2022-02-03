@@ -5,21 +5,33 @@ import {
 import React, { Component } from 'react'
 import Calendar from './scheduling/Calendar.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import axios from "axios"
+import { get, post } from '../../util/rest'
 
 class Profile extends Component {
   constructor() {
     super();
     this.state = {
-      user: "",
+      user: {
+        username: '',
+        email: '',
+        password: '',
+        first_name: '',
+        last_name: '',
+        school_affiiation: '',
+        major: '',
+        bio: '',
+        profile_photo: '',
+        following: [], 
+        followers: [],
+      }
     }
   }
 
   componentDidMount = () => {
-    axios
-    .get("/user/profile")
-    .then(result => {
-      this.setState({ user: result?.data })
+    get("user/profile", result => {
+      if (result?.data?.length) {
+        this.setState({ user: result?.data })
+      }
     })
   }
 
@@ -43,7 +55,7 @@ class Profile extends Component {
   }
 
   followUser = () => {
-    axios.post('/user/followUser', { followUser = this.state.user.username })
+    post('user/followUser', { followUser = this.state.user.username })
     // FIXME: modify for each individual user profile later
   }
 

@@ -2,6 +2,7 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const verifyJWT = require('../middleware/jwt')
 
 const router = express.Router()
 
@@ -70,7 +71,7 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.get('/profile', (req, res, next) => {
+router.get('/profile', verifyJWT, (req, res) => {
     res.send(req.user)
 })
 
