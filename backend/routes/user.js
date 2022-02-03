@@ -2,6 +2,7 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const verifyJWT = require('../middleware/jwt')
 
 const router = express.Router()
 
@@ -67,6 +68,49 @@ router.post('/login', (req, res, next) => {
                 return next('Invalid Username or Password')
             }
         })
+    })
+})
+
+router.get('/profile', verifyJWT, (req, res) => {
+    res.send(req.user)
+})
+
+/**
+ * requires followuser in the axios post
+ */
+router.post("/followUser", (req, res) => {
+    const currUser = req.user?.username;
+    const followerUser = req.body.followUser;
+
+    User.findOne({ username: currUser }).then( user => {
+        if (!user) {
+            // User doesn't exist
+            return res.status(400).json( { username: "User not found" });
+        } else {
+            user.followers.push({ username: followerUser })
+            user.save().then( user => { 
+                console.log("Followed user successfully")
+                res.json(user)
+            }).catch(err => console.log(err));
+        }
+    })
+})
+
+router.post("/unfollowUser", (req, res) => {
+    const currUser = req.user?.username;
+    const followerUser = req.body.followUser;
+
+    User.findOne({ username: currUser }).then( user => {
+        if (!user) {
+            // User doesn't exist
+            return res.status(400).json( { username: "User not found" });
+        } else {
+            user.followers.pull({ username: followerUser })
+            user.save().then( user => { 
+                console.log("Unfollowed user successfully")
+                res.json(user)
+            }).catch(err => console.log(err));
+        }
     })
 })
 
