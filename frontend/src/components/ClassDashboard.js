@@ -1,10 +1,13 @@
 import '../styles/App.css'
 import React from 'react'
-import { Button, Card, Form } from 'react-bootstrap'
+import { Button, Card, Form, Alert } from 'react-bootstrap'
 
 function ClassDashboard() {
   return (
     <div style={{ margin: '2em' }}>
+      <p>
+        <a href='/'>Back to Home</a>
+      </p>
       <Card>
         <Card.Body>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -27,13 +30,49 @@ function ClassDashboard() {
       </Card>
       <br />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Card style={{ width: '18%' }}>
-          <p>Lecture</p>
-          <p>MFW 1:45PM - 3:15PM</p>
-          <p>Other class details</p>
-        </Card>
-        <Card style={{ width: '60%' }}>Discussion Posts</Card>
-        <Card style={{ width: '18%' }}>Upcoming Assignments</Card>
+        <div style={{ width: '18%' }}>
+          <Alert variant='success'>Class Details</Alert>
+          <Card>
+            <Card.Body>
+              <Card.Title>Class Times</Card.Title>
+              <p>MWF 1:45PM - 3:15PM</p>
+              <Card.Title>Students</Card.Title>
+              <Card.Text>
+                <ul>
+                  <li>Christina Lu</li>
+                  <li>Grace Jiang</li>
+                  <li>Carol Li</li>
+                  <li>Damian Krupa</li>
+                </ul>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </div>
+        <div style={{ width: '60%' }}>
+          <Alert variant='primary'>Discussion Posts</Alert>
+          <Card className='bg-light' style={{ padding: '10px' }}>
+            <Form.Group
+              className='mb-3'
+              controlId='exampleForm.ControlTextarea1'
+            >
+              <Form.Control
+                as='textarea'
+                placeholder='Write post here'
+                rows={3}
+              />
+            </Form.Group>
+            <Button>Post</Button>
+          </Card>
+        </div>
+        <div style={{ width: '18%' }}>
+          <Alert variant='warning'>Upcoming Assignments</Alert>
+          <Card style={{ marginBottom: '10px' }}>
+            <Card.Body>Homework 1</Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>Homework 2</Card.Body>
+          </Card>
+        </div>
       </div>
     </div>
   )
