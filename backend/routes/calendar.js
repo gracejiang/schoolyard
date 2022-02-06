@@ -5,6 +5,7 @@ const uuid = require('uuid')
 const { S3 } = require('../aws/s3')
 const Ics = require('../models/ics')
 const CalCustomEvent = require('../models/calCustomEvent')
+const GCal = require('../models/gCal')
 
 const router = express.Router()
 
@@ -176,6 +177,70 @@ router.delete('/custom-event/:eventId', verifyJWT, async (req, res, next) => {
 
     await CalCustomEvent.deleteOne({ username, _id: eventId })
     return res.json({success: true})
+  } catch (err) {
+    next(err)
+  }
+})
+
+
+
+
+/** GCal events **/
+
+router.post('/gcal-events', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
+  let { events, gcalId, gcalName } = req.body
+  if (!gcalId || !gcalName || typeof gcalName !== "string" || typeof gcalId !== "string" || typeof events !== "object"
+    || !events?.length) {
+    return next('Invalid request!')
+  }
+
+  // TODO: remove GCal if already exists
+
+  try {
+    await GCal.create({
+      username,
+      gcalId,
+      gcalName
+    })
+  } catch (err) {
+    return next(err)
+  }
+
+  events = events
+    .filter(({
+      startDate,
+      endDate,
+      isRecurring,
+      startRecurDate,
+      rrule,
+    }) =>
+      new Date(startDate).getTime() && new Date(endDate).getTime() &&
+        new Date(startDate).getTime() < new Date(endDate).getTime() &&
+        (!isRecurring || (typeof rrule === "string" && new Date(startRecurDate).getTime())))
+    .map(({
+      title,
+      startDate,
+      endDate,
+      isRecurring,
+      startRecurDate,
+      rrule,
+    }) => {
+      return {
+        username,
+        gcalId,
+        title: title?.length && '(no title)' || title,
+        is_free_block: false,
+        start_date: new Date(startDate),
+        end_date: new Date(endDate),
+        is_recurring: !!isRecurring,
+        recur_start_date: isRecurring && new Date(startRecurDate) || null,
+        rrule: isRecurring && rrule || null
+      }
+    })
+
+  try {
+    res.send(await CalCustomEvent.create(events))
   } catch (err) {
     next(err)
   }
