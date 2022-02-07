@@ -6,9 +6,10 @@ import UploadIcs from './UploadIcs'
 import {post, remove} from '../../util/rest'
 import Calendar from './Calendar'
 import {loadCalendarEvents, loadCalendarList} from "../../util/gapi";
+import AddEventModal from "./AddEventModal";
 
 function ImportGCalModal({
-  show, setShow
+  show, setShow, customEvents, setCustomEvents, parseCustomEventPayload, gcals, setGCals
 }) {
   const [calendarsList, setCalendarsList] = useState([])
   const [isImportingCalendar, setIsImportingCalendar] = useState(false)
@@ -21,7 +22,7 @@ function ImportGCalModal({
   const importCalendarEvents = (calendarId, calendarName) => {
     setIsImportingCalendar(true)
     loadCalendarEvents(calendarId).then(events => {
-      if (!events?.length) {
+      if (!events) {
         setShow(false)
         return
       }
@@ -49,7 +50,8 @@ function ImportGCalModal({
         gcalName: calendarName,
         events: parsedEvents,
       }, result => {
-
+        setGCals([...gcals, { gcalId: calendarId, gcalName: calendarName }])
+        setCustomEvents(customEvents.concat(result.data.map(parseCustomEventPayload)))
         setShow(false)
       })
     }).catch(() => setShow(false))

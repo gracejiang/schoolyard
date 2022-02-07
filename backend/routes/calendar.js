@@ -190,14 +190,16 @@ router.delete('/custom-event/:eventId', verifyJWT, async (req, res, next) => {
 router.post('/gcal-events', verifyJWT, async (req, res, next) => {
   const username = req.user?.username
   let { events, gcalId, gcalName } = req.body
-  if (!gcalId || !gcalName || typeof gcalName !== "string" || typeof gcalId !== "string" || typeof events !== "object"
-    || !events?.length) {
+  if (!gcalId || !gcalName || typeof gcalName !== "string" || typeof gcalId !== "string" || typeof events?.length !== "number") {
     return next('Invalid request!')
   }
 
-  // TODO: remove GCal if already exists
 
   try {
+    if (await GCal.findOne({ username, gcalId })) {
+      return next("You already have this calendar imported!")
+    }
+
     await GCal.create({
       username,
       gcalId,
@@ -229,7 +231,7 @@ router.post('/gcal-events', verifyJWT, async (req, res, next) => {
       return {
         username,
         gcalId,
-        title: title?.length && '(no title)' || title,
+        title: title?.length && title || '(no title)',
         is_free_block: false,
         start_date: new Date(startDate),
         end_date: new Date(endDate),
@@ -241,6 +243,33 @@ router.post('/gcal-events', verifyJWT, async (req, res, next) => {
 
   try {
     res.send(await CalCustomEvent.create(events))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/gcals', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
+  try {
+    res.send((await GCal.find({ username })))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/gcal/:gcalId', verifyJWT, async (req, res, next) => {
+  const { gcalId } = req.params
+  const username = req.user?.username
+  try {
+    // authenticate that this GCal belongs to this user
+    const userGCal = await GCal.findOne({ username, gcalId })
+    if (!userGCal) {
+      return next("You don't own such Google Calendar!")
+    }
+
+    await CalCustomEvent.deleteMany({ username, gcalId })
+    await GCal.deleteOne({ username, gcalId })
+    return res.json({success: true})
   } catch (err) {
     next(err)
   }

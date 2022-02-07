@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
-//import rrulePlugin from '@fullcalendar/rrule'
+import rrulePlugin from '@fullcalendar/rrule'
 import '../../styles/Calendar.css'
 import {get, getServerUrl, post} from '../../util/rest'
 import IcsManagementModal from './IcsManagementModal'
@@ -20,20 +20,21 @@ const updateCustomEvents = (customEvents, customEventsIds, setCustomEventsIds, c
   for (const eventToAdd of eventsToAdd) {
     const eventObject = {
       id: eventToAdd.id,
-      color: eventToAdd.gcalId ? "yellow" : (eventToAdd.isFreeBlock ? "green" : "purple"),
-//      allDay: eventToAdd.isAllDay,
+      color: eventToAdd.gcalId ? "orange" : (eventToAdd.isFreeBlock ? "green" : "purple"),
       title: eventToAdd.title,
       isCustomEvent: !eventToAdd.gcalId,
       editable: !eventToAdd.gcalId,
     }
     if (eventToAdd.isRecurring) {
       eventObject.groupId = eventToAdd.id
-      eventObject.startTime = new Date(eventToAdd.startDate).toTimeString()
-      eventObject.endTime = new Date(eventToAdd.endDate).toTimeString()
-      eventObject.startRecur = new Date(eventToAdd.recurStartDate)
       if (eventToAdd.gcalId) {
-        eventObject.rrule = eventToAdd.rrule
+        const dtstart = new Date(eventToAdd.startDate).toISOString().replaceAll(/\.(.+?)Z/g, "Z").replaceAll(/-|:/g, "")
+        eventObject.rrule = `DTSTART:${dtstart}\n${eventToAdd.rrule}`
+        eventObject.duration = new Date(eventToAdd.endDate).getTime() - new Date(eventToAdd.startDate).getTime()
       } else {
+        eventObject.startTime = new Date(eventToAdd.startDate).toTimeString()
+        eventObject.endTime = new Date(eventToAdd.endDate).toTimeString()
+        eventObject.startRecur = new Date(eventToAdd.recurStartDate)
         if (!eventToAdd.isEndless) {
           eventObject.endRecur = new Date(eventToAdd.recurEndDate)
         }
@@ -96,9 +97,13 @@ function Calendar({ isPreview, previewIcsFiles }) {
      recur_start_date,
      start_date,
      title,
+     rrule,
+     gcalId,
      _id
     }) => ({
       id: _id,
+      gcalId,
+      rrule,
       title,
       startDate: start_date,
       endDate: end_date,
@@ -144,7 +149,7 @@ function Calendar({ isPreview, previewIcsFiles }) {
     <div className="schedule">
       <FullCalendar
         ref={calendarRef}
-        plugins={[/*rrulePlugin, */timeGridPlugin, iCalendarPlugin, interactionPlugin]}
+        plugins={[rrulePlugin, timeGridPlugin, iCalendarPlugin, interactionPlugin]}
         initialView="timeGridWeek"
         eventMaxStack={3}
         editable
@@ -235,6 +240,9 @@ function Calendar({ isPreview, previewIcsFiles }) {
       <GCalsManagementModal
         show={showGCalsManagementModal}
         setShow={setShowGCalsManagementModal}
+        customEvents={customEvents}
+        setCustomEvents={setCustomEvents}
+        parseCustomEventPayload={parseCustomEventPayload}
       />
       )}
       {!isPreview && (showAddEventModal && (
