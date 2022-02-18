@@ -3,10 +3,12 @@ import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import iCalendarPlugin from '@fullcalendar/icalendar'
+import rrulePlugin from '@fullcalendar/rrule'
 import '../../styles/Calendar.css'
 import {get, getServerUrl, post} from '../../util/rest'
 import IcsManagementModal from './IcsManagementModal'
 import AddEventModal from './AddEventModal'
+import GCalsManagementModal from "./GCalsManagementModal.js";
 
 
 const updateCustomEvents = (customEvents, customEventsIds, setCustomEventsIds, calendarApi) => {
@@ -18,20 +20,26 @@ const updateCustomEvents = (customEvents, customEventsIds, setCustomEventsIds, c
   for (const eventToAdd of eventsToAdd) {
     const eventObject = {
       id: eventToAdd.id,
-      color: eventToAdd.isFreeBlock ? "green" : "purple",
-//      allDay: eventToAdd.isAllDay,
+      color: eventToAdd.gcalId ? "orange" : (eventToAdd.isFreeBlock ? "green" : "purple"),
       title: eventToAdd.title,
-      isCustomEvent: true,
+      isCustomEvent: !eventToAdd.gcalId,
+      editable: !eventToAdd.gcalId,
     }
     if (eventToAdd.isRecurring) {
       eventObject.groupId = eventToAdd.id
-      eventObject.startTime = new Date(eventToAdd.startDate).toTimeString()
-      eventObject.endTime = new Date(eventToAdd.endDate).toTimeString()
-      eventObject.startRecur = new Date(eventToAdd.recurStartDate)
-      if (!eventToAdd.isEndless) {
-        eventObject.endRecur = new Date(eventToAdd.recurEndDate)
+      if (eventToAdd.gcalId) {
+        const dtstart = new Date(eventToAdd.startDate).toISOString().replaceAll(/\.(.+?)Z/g, "Z").replaceAll(/-|:/g, "")
+        eventObject.rrule = `DTSTART:${dtstart}\n${eventToAdd.rrule}`
+        eventObject.duration = new Date(eventToAdd.endDate).getTime() - new Date(eventToAdd.startDate).getTime()
+      } else {
+        eventObject.startTime = new Date(eventToAdd.startDate).toTimeString()
+        eventObject.endTime = new Date(eventToAdd.endDate).toTimeString()
+        eventObject.startRecur = new Date(eventToAdd.recurStartDate)
+        if (!eventToAdd.isEndless) {
+          eventObject.endRecur = new Date(eventToAdd.recurEndDate)
+        }
+        eventObject.daysOfWeek = eventToAdd.recurDays
       }
-      eventObject.daysOfWeek = eventToAdd.recurDays
     } else {
       eventObject.start = eventToAdd.startDate
       eventObject.end = eventToAdd.endDate
@@ -68,6 +76,7 @@ const updateIcsEventSources = (icsFiles, icsEventSourcesIds, setIcsEventSourcesI
 function Calendar({ isPreview, previewIcsFiles }) {
   const calendarRef = useRef()
   const [showIcsManagementModal, setShowIcsManagementModal] = useState(false)
+  const [showGCalsManagementModal, setShowGCalsManagementModal] = useState(false)
   const [showAddEventModal, setShowAddEventModal] = useState(false)
   const [customEvents, setCustomEvents] = useState([])
   const [customEventsIds, setCustomEventsIds] = useState([]) // ids of custom events already added to calendar
@@ -88,9 +97,13 @@ function Calendar({ isPreview, previewIcsFiles }) {
      recur_start_date,
      start_date,
      title,
+     rrule,
+     gcalId,
      _id
     }) => ({
       id: _id,
+      gcalId,
+      rrule,
       title,
       startDate: start_date,
       endDate: end_date,
@@ -136,7 +149,7 @@ function Calendar({ isPreview, previewIcsFiles }) {
     <div className="schedule">
       <FullCalendar
         ref={calendarRef}
-        plugins={[timeGridPlugin, iCalendarPlugin, interactionPlugin]}
+        plugins={[rrulePlugin, timeGridPlugin, iCalendarPlugin, interactionPlugin]}
         initialView="timeGridWeek"
         eventMaxStack={3}
         editable
@@ -202,9 +215,15 @@ function Calendar({ isPreview, previewIcsFiles }) {
               setShowAddEventModal(true)
             },
           },
+          manageGCals: isPreview ? undefined : {
+            text: 'GCals',
+            click: () => {
+              setShowGCalsManagementModal(true)
+            },
+          },
         }}
         headerToolbar={{
-          left: isPreview ? '' : 'addEvent manageIcs',
+          left: isPreview ? '' : 'addEvent manageIcs manageGCals',
           right: 'prev,next today',
           center: 'title',
         }}
@@ -215,6 +234,15 @@ function Calendar({ isPreview, previewIcsFiles }) {
         setShow={setShowIcsManagementModal}
         icsFiles={icsFiles}
         setIcsFiles={setIcsFiles}
+      />
+      )}
+      {!isPreview && (
+      <GCalsManagementModal
+        show={showGCalsManagementModal}
+        setShow={setShowGCalsManagementModal}
+        customEvents={customEvents}
+        setCustomEvents={setCustomEvents}
+        parseCustomEventPayload={parseCustomEventPayload}
       />
       )}
       {!isPreview && (showAddEventModal && (
