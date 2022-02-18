@@ -3,18 +3,24 @@ import {
   Button, Container, Col, Card,
 } from 'react-bootstrap'
 import React, { useState, useEffect } from 'react'
+import {useParams} from "react-router-dom";
 import Calendar from './scheduling/Calendar.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {get, post} from '../util/rest'
 
 function Profile() {
-  const [user, setUser] = useState('')
+  const { username } = useParams();
+  const [user, setUser] = useState({})
 
   useEffect(() => {
-    get(`user/profile`, result => {
-      if (result?.data) setUser(result.data)
+    get(`user/profile${username ? `/${username}` : ''}`, result => {
+      if (result?.data?.username) {
+        setUser(result.data)
+      } else {
+        window.location.pathname = '/'
+      }
     })
-  })
+  }, [username])
 
   return (
     <div id="profile" className="wrapper">
@@ -50,7 +56,7 @@ function Profile() {
       <Container className="row">
         <div className="schedule">
           <h2 className="profile-section-text">Schedule</h2>
-          <Calendar />
+          { user?.username && <Calendar isPreview={!!username} user={user} setUser={setUser} />}
         </div>
       </Container>
       <br />

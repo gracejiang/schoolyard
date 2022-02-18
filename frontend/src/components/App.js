@@ -25,7 +25,7 @@ function App() {
           <Route exact path='/exchange'>
             <ExchangePage />
           </Route>
-          <Route exact path='/profile'>
+          <Route path='/profile/:username?'>
             <Profile />
           </Route>
           <Route exact path='/group'>
