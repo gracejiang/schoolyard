@@ -2,9 +2,9 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const verifyJWT = require('../middleware/jwt')
 
 const router = express.Router()
-
 
 router.post('/register', async (req, res, next) => {
   const user = req.body
@@ -22,7 +22,16 @@ router.post('/register', async (req, res, next) => {
       username: user.username.toLowerCase(),
       email: user.email.toLowerCase(),
       password: user.password,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      school_affiliation: user.school_affiliation,
+      grad_year: user.grad_year,
+      major: user.major,
+      bio: user.bio,
+      profile_photo: user.profile_photo,
     })
+
+    console.log(dbUser)
 
     dbUser.save()
     // TODO: Popup here
@@ -68,6 +77,16 @@ router.post('/login', (req, res, next) => {
             }
         })
     })
+})
+
+router.get('/profile', verifyJWT, (req, res, next) => {
+    try {
+        User.findOne({username: req.user?.username}).then(user => {
+            res.send(user)
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
 module.exports = router
