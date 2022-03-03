@@ -10,7 +10,7 @@ function Dashboard() {
           <a href='upload-ics'>Upload ICS</a>
         </li>
         <li>
-          <a href='profile'>Profile</a>
+          <a href='profile/placeholder'>Profile</a>
         </li>
         <li>
           <a href='register'>Register</a>
@@ -22,7 +22,10 @@ function Dashboard() {
           <a href='exchange'>Exchange</a>
         </li>
         <li>
-          <a href='group'>Group</a>
+          <a href='grouplist'>Group List</a>
+        </li>
+        <li>
+          <a href='new-group'>Create Group</a>
         </li>
         <li>
           <a href='classes'>Classes</a>

@@ -10,7 +10,9 @@ import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
 import ExchangePage from './ExchangePage'
-import Group from './Group'
+import Group from './group/Group'
+import CreateGroup from './group/CreateGroup'
+import GroupList from './group/GroupList'
 import Classes from './Classes'
 import ClassDashboard from './ClassDashboard'
 
@@ -25,10 +27,19 @@ function App() {
           <Route exact path='/exchange'>
             <ExchangePage />
           </Route>
-          <Route exact path='/profile'>
+          <Route exact path='/profle'>
             <Profile />
           </Route>
-          <Route exact path='/group'>
+          <Route exact path='/profile/:userId'>
+            <Profile />
+          </Route>
+          <Route exact path='/grouplist'>
+            <GroupList />
+          </Route>
+          <Route exact path='/new-group'>
+            <CreateGroup />
+          </Route>
+          <Route exact path='/group/:groupId'>
             <Group />
           </Route>
           <Route exact path='/register'>

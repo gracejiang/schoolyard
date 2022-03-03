@@ -1,23 +1,42 @@
 import '../styles/App.css'
 import {
-  Button, Container, Col, Card,
+  Button, Container, Col, Card
 } from 'react-bootstrap'
 import React, { useState, useEffect } from 'react'
+// import { useSearchParams } from 'react-router-dom'
 import Calendar from './scheduling/Calendar.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {get, post} from '../util/rest'
 
 function Profile() {
   const [user, setUser] = useState('')
+  const [allUsers, setAllUsers] = useState([])
+  // const [userParams, setUserParams] = useSearchParams()
 
   useEffect(() => {
+    // TODO: check if user is logged in
     get(`user/profile`, result => {
       if (result?.data) setUser(result.data)
     })
   })
 
+  useEffect(() => {
+    get(`user/users`, result => {
+      if (result?.data) setAllUsers([...result.data])
+    })
+  }, [])
+
   return (
     <div id="profile" className="wrapper">
+      <Container >
+        <h2>all db users</h2>
+        { allUsers.map((currUser) => (
+          <p>
+            <a key = { currUser._id } href={`/profile/${currUser._id}`}>{ currUser.first_name }'s Page</a>
+          </p>
+        )) }
+      </Container>
+
       <Container className="row">
         <Card className="mb-3 border-light">
           <div className="row g-0">
