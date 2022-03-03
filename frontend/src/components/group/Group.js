@@ -1,6 +1,7 @@
 import '../../styles/App.css'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import {get, post} from '../../util/rest'
 
 import {
   Figure,
@@ -13,7 +14,16 @@ import {
   Alert,
 } from 'react-bootstrap'
 
+// const [group, setGroup] = useState('')
+
 function Group() {
+
+  // useEffect(() => {
+  //   get(`group/group/:id`, result => {
+  //     if (result?.data) setGroup(result.data)
+  //   })
+  // })
+
   return (
     <Container fluid>
       <br />
