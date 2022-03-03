@@ -28,14 +28,6 @@ function Profile() {
 
   return (
     <div id="profile" className="wrapper">
-      <Container >
-        <h2>all db users</h2>
-        { allUsers.map((currUser) => (
-          <p>
-            <a key = { currUser._id } href={`/profile/${currUser._id}`}>{ currUser.first_name }'s Page</a>
-          </p>
-        )) }
-      </Container>
 
       <Container className="row">
         <Card className="mb-3 border-light">
