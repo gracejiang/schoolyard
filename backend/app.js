@@ -5,6 +5,7 @@ const cors = require('cors')
 const path = require('path')
 const CalendarRouter = require('./routes/calendar')
 const UserRouter = require('./routes/user')
+const GroupRouter = require('./routes/group')
 
 // load environmental variables from .env
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
@@ -29,6 +30,7 @@ app.use(fileUpload())
 // routers
 app.use('/calendar', CalendarRouter)
 app.use('/user', UserRouter)
+app.use('/group', GroupRouter)
 
 // send 500 error
 app.use((err, req, res, next) => {

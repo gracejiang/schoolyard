@@ -79,11 +79,40 @@ router.post('/login', (req, res, next) => {
     })
 })
 
+// GET for current logged in user
 router.get('/profile', verifyJWT, (req, res, next) => {
     try {
         User.findOne({username: req.user?.username}).then(user => {
             res.send(user)
         })
+    } catch (err) {
+        next(err)
+    }
+})
+
+// GET for user based on slug
+router.get('/profile/:userId', verifyJWT, (req, res, next) => {
+    try {
+        User.findOne({username: req.params.userId}).then(user => {
+            res.send(user)
+        })
+    } catch (err) {
+        next(err)
+    }
+})
+
+// GET for all users stored in db
+router.get('/users', (req, res, next) => {
+    try {
+        // User.find({}, (err, users) => {
+        //     var userMap = {}
+        //     users.forEach((user) => {
+        //         // Mapping username to user
+        //         userMap[user.username] = user;
+        //     });
+        //     res.send(userMap)
+        // })
+        User.find({}).then(users => { res.send(users) })
     } catch (err) {
         next(err)
     }
