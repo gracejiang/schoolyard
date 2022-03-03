@@ -3,7 +3,7 @@ import React from 'react'
 
 function Dashboard() {
   return (
-    <div>
+    <div style="text-align: center; padding: 20px; font-family: sans-serif;">
       <h1>Schoolyard</h1>
       <ul>
         <li>
@@ -19,7 +19,8 @@ function Dashboard() {
           <a href='login'>Login</a>
         </li>
         <li>
-          <a href='exchange'>Exchange</a>
+          <a href='http://127.0.0.1:8000/'>Exchanges/Marketplace</a>
+          {/* <a href='exchange'>Exchange</a> */}
         </li>
         <li>
           <a href='grouplist'>Group List</a>
