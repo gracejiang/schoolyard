@@ -3,7 +3,7 @@ import React from 'react'
 
 function Dashboard() {
   return (
-    <div style="text-align: center; padding: 20px; font-family: sans-serif;">
+    <div style={{textAlign: "center", padding: "20px", fontFamily: "sans-serif"}}>
       <h1>Schoolyard</h1>
       <ul>
         <li>
