@@ -39,9 +39,9 @@ function App() {
           <Route exact path='/new-group'>
             <CreateGroup />
           </Route>
-          <Route exact path='/group/:groupId'>
-            <Group />
-          </Route>
+          <Switch>
+              <Route path="/group/:id" children={<Group />} />
+          </Switch>
           <Route exact path='/register'>
             <Register />
           </Route>
