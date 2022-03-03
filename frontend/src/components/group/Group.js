@@ -24,7 +24,7 @@ function Group() {
     get(`group/group/${id}`, result => {
       if (result?.data) setGroup(result.data)
     })
-  })
+  }, [id])
 
   return (
     <Container fluid>

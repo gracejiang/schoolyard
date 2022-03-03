@@ -37,7 +37,7 @@ router.get('/groups', (req, res, next) => {
 
 router.get('/group/:id', verifyJWT, (req, res, next) => {
     try {
-        Group.find({_id: req.params.id}).then(group => {
+        Group.findOne({_id: req.params.id}).then(group => {
             res.send(group)
         })
     } catch (err) {
