@@ -13,8 +13,11 @@ import ExchangePage from './ExchangePage'
 import Group from './Group'
 import Classes from './Classes'
 import ClassDashboard from './ClassDashboard'
+import Schedule from "./scheduling/Schedule";
+import {useState} from "react";
 
 function App() {
+  const [forceRecreateKey, setForceRecreateKey] = useState(0);
   return (
     <div className='App'>
       <Router>
@@ -27,6 +30,9 @@ function App() {
           </Route>
           <Route path='/profile/:username?'>
             <Profile />
+          </Route>
+          <Route path='/schedule/:usernamesString?'>
+            <Schedule key={`schedule-${forceRecreateKey}`} forceRecreateKey={forceRecreateKey} setForceRecreateKey={setForceRecreateKey} />
           </Route>
           <Route exact path='/group'>
             <Group />

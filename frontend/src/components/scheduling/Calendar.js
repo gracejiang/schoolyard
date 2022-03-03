@@ -230,9 +230,15 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser }) {
               setShowPrivacyModal(true)
             }
           },
+          schedule: isPreview && !previewIcsFiles ? {
+            text: 'Schedule a meeting',
+            click: () => {
+              window.location.pathname = `/schedule/${user?.username}`
+            }
+          } : undefined,
         }}
         headerToolbar={{
-          left: isPreview ? '' : 'addEvent manageIcs manageGCals',
+          left: isPreview ? (previewIcsFiles ? '' : 'schedule') : 'addEvent manageIcs manageGCals',
           right: `prev,next today${isPreview && user ? '' : ' privacy'}`,
           center: 'title',
         }}
