@@ -1,6 +1,6 @@
 import '../styles/App.css'
 import {
-  Button, Container, Col, Card,
+  Button, Container, Col, Card
 } from 'react-bootstrap'
 import React, { useState, useEffect } from 'react'
 import {useParams} from "react-router-dom";
@@ -19,11 +19,21 @@ function Profile() {
       } else {
         window.location.pathname = '/'
       }
+    }, err => {
+      if (err && err.response) {
+        if (err.response.data.message) {
+          alert(err.response.data.message)
+        } else {
+          alert(err.response.data)
+        }
+      }
+      window.location.pathname = '/'
     })
   }, [username])
 
   return (
     <div id="profile" className="wrapper">
+
       <Container className="row">
         <Card className="mb-3 border-light">
           <div className="row g-0">
