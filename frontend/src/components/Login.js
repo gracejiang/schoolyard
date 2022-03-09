@@ -21,6 +21,7 @@ export default function Login() {
     post('user/login', user, ({ data }) => {
       alert('Success!')
       localStorage.accessToken = data.token
+      window.location.pathname = '/profile'
     })
   }
 

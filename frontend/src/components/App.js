@@ -10,7 +10,9 @@ import Profile from './Profile'
 import Register from './Register'
 import Login from './Login'
 import ExchangePage from './ExchangePage'
-import Group from './Group'
+import Group from './group/Group'
+import CreateGroup from './group/CreateGroup'
+import GroupList from './group/GroupList'
 import Classes from './Classes'
 import ClassDashboard from './ClassDashboard'
 import Schedule from "./scheduling/Schedule";
@@ -28,13 +30,19 @@ function App() {
           <Route exact path='/exchange'>
             <ExchangePage />
           </Route>
-          <Route path='/profile/:username?'>
+          <Route exact path='/profile/:username?'>
             <Profile />
           </Route>
           <Route path='/schedule/:usernamesString?'>
             <Schedule key={`schedule-${forceRecreateKey}`} forceRecreateKey={forceRecreateKey} setForceRecreateKey={setForceRecreateKey} />
           </Route>
-          <Route exact path='/group'>
+          <Route exact path='/grouplist'>
+            <GroupList />
+          </Route>
+          <Route exact path='/new-group'>
+            <CreateGroup />
+          </Route>
+          <Route path="/group/:id">
             <Group />
           </Route>
           <Route exact path='/register'>

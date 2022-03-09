@@ -26,7 +26,10 @@ export default function Register() {
       profile_photo: form[9].value,
     }
 
-    post('user/register', user, () => alert('Success!'))
+    post('user/register', user, () => {
+      alert('Success!')
+      window.location.pathname = '/login'
+    })
   }
 
   return (
