@@ -20,6 +20,9 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
   const [exposedCalendarApi, setExposedCalendarApi] = useState()
   const [areCustomEventsLoaded, setAreCustomEventsLoaded] = useState(false)
   const [areIcsEventsLoaded, setAreIcsEventsLoaded] = useState(false)
+  const [usersEvents, setUsersEvents] = useState({})
+  const [weekStart, setWeekStart] = useState(null)
+  const [weekEnd, setWeekEnd] = useState(null)
 
   useEffect(() => {
     if (forceRecreateKey !== usernamesString) {
@@ -67,17 +70,110 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
   useEffect(() => {
     if (currentlyCalendarProcessingUser && exposedCalendarApi && areIcsEventsLoaded && areCustomEventsLoaded) {
       setTimeout(() => {
-        processNextUsersEvents()
-        const weekStart = exposedCalendarApi.view?.activeStart || new Date()
-        const weekEnd = exposedCalendarApi.view?.activeEnd || new Date()
+        let newWeekStart = weekStart
+        let newWeekEnd = weekEnd
+        if (!weekStart) {
+          newWeekStart = exposedCalendarApi.view?.activeStart || new Date()
+          setWeekStart(newWeekStart)
+        }
+        if (!weekEnd) {
+          newWeekEnd = exposedCalendarApi.view?.activeEnd || new Date()
+          setWeekEnd(newWeekEnd)
+        }
         const calendarWeekEvents = exposedCalendarApi.getEvents().filter(ev =>
-          ev?.end?.getTime() >= weekStart.getTime() && ev?.start?.getTime() <= weekEnd.getTime())
-        console.log(calendarWeekEvents)
+          ev?.end?.getTime() >= newWeekStart.getTime() && ev?.start?.getTime() <= newWeekEnd.getTime())
+          .map(ev => {
+            if (ev?.start?.getTime() < newWeekStart.getTime()) {
+              ev.start = newWeekStart
+            }
+            if (ev?.end?.getTime() > newWeekEnd.getTime()) {
+              ev.end = newWeekEnd
+            }
+            return ev
+          })
+        const newUsersEvents = {...usersEvents}
+        newUsersEvents[currentlyCalendarProcessingUser.username] = calendarWeekEvents
+        setUsersEvents(newUsersEvents)
+        processNextUsersEvents(newUsersEvents, newWeekStart, newWeekEnd)
       }, 1)
     }
   }, [currentlyCalendarProcessingUser, exposedCalendarApi, areIcsEventsLoaded, areCustomEventsLoaded])
 
-  const processNextUsersEvents = () => {
+  const mergeTimes = (usersEvents, weekStart, weekEnd) => {
+    const indices = {}
+    for (const user of users) {
+      // sort events in increasing order of start times
+      usersEvents[user.username] = usersEvents[user.username]?.sort((ev1, ev2) => ev1.start.getTime() - ev2.start.getTime())
+      indices[user.username] = 0
+    }
+
+    // consolidate events - merge overlapping events and utilize "free blocks"
+    for (const user of users) {
+      if (usersEvents[user.username].length === 0) {
+        continue;
+      }
+      let userConsolidatedEvents = []
+
+      const userConsolidatedBusyEvents = []
+      const userConsolidatedFreeEvents = []
+      let currConsolidatedBusy = {ev: null}
+      let currConsolidatedFree = {ev: null}
+      for (let i = 0; i < usersEvents[user.username].length; i++) {
+        const event = usersEvents[user.username][i]
+        if (!event) {
+          continue
+        }
+        let userConsolidatedTypeEvents
+        let currConsolidatedType
+        if (event.extendedProps.isFreeBlock) {
+          userConsolidatedTypeEvents = userConsolidatedFreeEvents
+          currConsolidatedType = currConsolidatedFree
+        } else {
+          userConsolidatedTypeEvents = userConsolidatedBusyEvents
+          currConsolidatedType = currConsolidatedBusy
+        }
+        if (!currConsolidatedType.ev) {
+          currConsolidatedType.ev = {end: event.end, start: event.start}
+          continue
+        }
+
+        if (event.end.getTime() <= currConsolidatedType.ev.end.getTime()) {
+          continue
+        }
+
+        if (event.start.getTime() <= currConsolidatedType.ev.end.getTime()) {
+          currConsolidatedType.ev.end = event.end
+        } else {
+          userConsolidatedTypeEvents.push(currConsolidatedType.ev)
+          currConsolidatedType.ev = {end: event.end, start: event.start}
+        }
+      }
+      if (currConsolidatedFree.ev) {
+        userConsolidatedFreeEvents.push(currConsolidatedFree.ev)
+      }
+      if (currConsolidatedBusy.ev) {
+        userConsolidatedBusyEvents.push(currConsolidatedBusy.ev)
+      }
+      if (userConsolidatedBusyEvents.length === 0 || userConsolidatedFreeEvents.length === 0) {
+        userConsolidatedEvents = userConsolidatedBusyEvents
+      } else { // TODO: remove free blocks from busy blocks
+
+      }
+    }
+
+    const currEvent = {
+      isFree: true,
+      start: weekStart,
+      end: weekEnd
+    }
+    const mergedEvents = []
+
+    /*while (currEvent.start.getTime() < weekEnd.getTime()) {
+    }*/
+    console.log(usersEvents)
+  }
+
+  const processNextUsersEvents = (usersEvents, weekStart, weekEnd) => {
     let nextUserToProcessIndex = users.findIndex(user => user?.username === currentlyCalendarProcessingUser?.username) + 1
     setCurrentlyCalendarProcessingUser(null)
     setExposedCalendarApi(null)
@@ -85,7 +181,10 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
     setAreIcsEventsLoaded(false)
     setTimeout(() => {
       if (nextUserToProcessIndex >= users.length) {
-
+        if (usersEvents && Object.keys(usersEvents).length) {
+          mergeTimes(usersEvents, weekStart, weekEnd)
+        }
+        setUsersEvents({})
       } else {
         setCurrentlyCalendarProcessingUser(users[nextUserToProcessIndex])
       }

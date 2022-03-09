@@ -25,6 +25,7 @@ const updateCustomEvents = (isPreview, user, customEvents, customEventsIds, setC
         (eventToAdd.gcalId ? "orange" : (eventToAdd.isFreeBlock ? "green" : "purple")),
       title: eventToAdd.title,
       isCustomEvent: !eventToAdd.gcalId,
+      isFreeBlock: eventToAdd.isFreeBlock,
       editable: !eventToAdd.gcalId && !isPreview,
     }
     if (eventToAdd.isRecurring) {
