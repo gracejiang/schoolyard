@@ -10,6 +10,7 @@ import IcsManagementModal from './IcsManagementModal'
 import AddEventModal from './AddEventModal'
 import GCalsManagementModal from "./GCalsManagementModal.js";
 import PrivacyModal from "./PrivacyModal";
+import {Tooltip} from "bootstrap";
 
 
 const updateCustomEvents = (isPreview, user, customEvents, customEventsIds, setCustomEventsIds, calendarApi, setAreCustomEventsLoaded, firstCustomEventDataLoaded) => {
@@ -21,12 +22,13 @@ const updateCustomEvents = (isPreview, user, customEvents, customEventsIds, setC
   for (const eventToAdd of eventsToAdd) {
     const eventObject = {
       id: eventToAdd.id,
-      color: isPreview && !user.showCalendarEventColors ? null :
-        (eventToAdd.gcalId ? "orange" : (eventToAdd.isFreeBlock ? "green" : "purple")),
+      color: eventToAdd.customColor ? eventToAdd.customColor : (isPreview && !user?.showCalendarEventColors ? null :
+        (eventToAdd.gcalId ? "orange" : (eventToAdd.isScheduledMeeting ? "red" : (eventToAdd.isFreeBlock ? "green" : "purple")))),
       title: eventToAdd.title,
       isCustomEvent: !eventToAdd.gcalId,
       isFreeBlock: eventToAdd.isFreeBlock,
-      editable: !eventToAdd.gcalId && !isPreview,
+      tooltip: eventToAdd.tooltip,
+      editable: !eventToAdd.gcalId && !isPreview
     }
     if (eventToAdd.isRecurring) {
       eventObject.groupId = eventToAdd.id
@@ -91,7 +93,19 @@ const updateIcsEventSources = (username, icsFiles, icsEventSourcesIds, setIcsEve
   setIcsEventSourcesIds(icsFiles.map(({ s3IcsId }) => s3IcsId))
 }
 
-function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalendarApi, setAreCustomEventsLoaded, setAreIcsEventsLoaded }) {
+function Calendar({
+  isPreview,
+  previewIcsFiles,
+  user,
+  setUser,
+  setExposedCalendarApi,
+  setAreCustomEventsLoaded,
+  setAreIcsEventsLoaded,
+  mergedCustomEvents,
+  usersToScheduleWith,
+  navigatedNextOrPrev,
+  setNavigatedNextOrPrev,
+}) {
   const calendarRef = useRef()
   const [showIcsManagementModal, setShowIcsManagementModal] = useState(false)
   const [showGCalsManagementModal, setShowGCalsManagementModal] = useState(false)
@@ -120,6 +134,7 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
      title,
      rrule,
      gcalId,
+     is_scheduled_meeting,
      _id
     }) => ({
       id: _id,
@@ -135,11 +150,14 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
       recurDays: recur_days,
       recurEndDate: recur_end_date,
       recurStartDate: recur_start_date,
+      isScheduledMeeting: is_scheduled_meeting
   })
 
   useEffect(() => {
     if (previewIcsFiles) {
       setIcsFiles([...previewIcsFiles])
+    } else if (mergedCustomEvents) {
+      setCustomEvents(mergedCustomEvents)
     } else {
       get(`calendar${isPreview ? `/${user.username}` : ''}/ics`, result => {
         if (result?.data?.length) {
@@ -162,7 +180,7 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
         }
       })
     }
-  }, [])
+  }, [mergedCustomEvents])
 
   useEffect(() => {
     if (calendarRef?.current?.getApi() && setExposedCalendarApi) {
@@ -192,6 +210,18 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
         scrollTime="08:00:00"
         scrollTimeReset={false}
         allDaySlot={false}
+        eventDidMount={info => {
+          if (info.event.extendedProps.tooltip) {
+            new Tooltip(info.el, {
+              title: info.event.extendedProps.tooltip,
+              placement: 'top',
+              trigger: 'hover',
+              container: 'body',
+              html: true,
+              });
+            }
+          }
+        }
         select={info => {
           info.jsEvent.preventDefault() // don't let the browser navigate
           calendarRef?.current?.getApi()?.unselect()
@@ -200,10 +230,15 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
         }}
         eventClick={info => {
           info.jsEvent.preventDefault(); // don't let the browser navigate
-          if (!showAddEventModal && info.event.extendedProps.isCustomEvent) {
-            setEditedEvent(customEvents.find(ev => ev.id === info.event.id))
-            setEditingEvent(true)
+          if (mergedCustomEvents) {
+            setEditedEvent({startDate: info.event.start, endDate: info.event.end})
             setShowAddEventModal(true)
+          } else {
+            if (!showAddEventModal && info.event.extendedProps.isCustomEvent) {
+              setEditedEvent(customEvents.find(ev => ev.id === info.event.id))
+              setEditingEvent(true)
+              setShowAddEventModal(true)
+            }
           }
         }}
         eventChange={info => {
@@ -260,16 +295,30 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
               setShowPrivacyModal(true)
             }
           },
-          schedule: isPreview && !previewIcsFiles ? {
+          schedule: isPreview && !previewIcsFiles && !mergedCustomEvents ? {
             text: 'Schedule a meeting',
             click: () => {
               window.location.pathname = `/schedule/${user?.username}`
             }
           } : undefined,
+          customPrev: mergedCustomEvents ? {
+            text: "<",
+            click: () => {
+              calendarRef.current.getApi().prev()
+              setNavigatedNextOrPrev(--navigatedNextOrPrev)
+            }
+          } : undefined,
+          customNext: mergedCustomEvents ? {
+            text: ">",
+            click: () => {
+              calendarRef.current.getApi().next()
+              setNavigatedNextOrPrev(++navigatedNextOrPrev)
+            }
+          } : undefined,
         }}
         headerToolbar={{
-          left: isPreview ? (previewIcsFiles ? '' : 'schedule') : 'addEvent manageIcs manageGCals',
-          right: `prev,next today${isPreview && user ? '' : ' privacy'}`,
+          left: isPreview ? (previewIcsFiles || mergedCustomEvents ? '' : 'schedule') : 'addEvent manageIcs manageGCals',
+          right: mergedCustomEvents ? 'customPrev,customNext' : `prev,next today${(isPreview && (user || previewIcsFiles)) ? '' : ' privacy'}`,
           center: 'title',
         }}
       />
@@ -290,7 +339,7 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
         parseCustomEventPayload={parseCustomEventPayload}
       />
       )}
-      {!isPreview && (showAddEventModal && (
+      {(!isPreview || mergedCustomEvents) && (showAddEventModal && (
         <AddEventModal
           show={showAddEventModal}
           setShow={setShowAddEventModal}
@@ -301,6 +350,7 @@ function Calendar({ isPreview, previewIcsFiles, user, setUser, setExposedCalenda
           parseCustomEventPayload={parseCustomEventPayload}
           setEditingEvent={setEditingEvent}
           setEditedEvent={setEditedEvent}
+          usersToScheduleWith={usersToScheduleWith}
         />
       ))}
       {!isPreview && (showPrivacyModal && (

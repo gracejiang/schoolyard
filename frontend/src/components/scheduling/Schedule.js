@@ -16,13 +16,14 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
   const [users, setUsers] = useState([])
   const [usernameToAdd, setUsernameToAdd] = useState("")
 
+  const [loadingUserCalendarEvents, setLoadingUserCalendarEvents] = useState(false)
   const [currentlyCalendarProcessingUser, setCurrentlyCalendarProcessingUser] = useState()
   const [exposedCalendarApi, setExposedCalendarApi] = useState()
   const [areCustomEventsLoaded, setAreCustomEventsLoaded] = useState(false)
   const [areIcsEventsLoaded, setAreIcsEventsLoaded] = useState(false)
   const [usersEvents, setUsersEvents] = useState({})
-  const [weekStart, setWeekStart] = useState(null)
-  const [weekEnd, setWeekEnd] = useState(null)
+  const [navigatedNextOrPrev, setNavigatedNextOrPrev] = useState(0)
+  const [mergedCustomEvents, setMergedCustomEvents] = useState([])
 
   useEffect(() => {
     if (forceRecreateKey !== usernamesString) {
@@ -69,38 +70,45 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
 
   useEffect(() => {
     if (currentlyCalendarProcessingUser && exposedCalendarApi && areIcsEventsLoaded && areCustomEventsLoaded) {
+      if (navigatedNextOrPrev > 0) {
+        for (let i = 0; i < navigatedNextOrPrev; i++) {
+          exposedCalendarApi?.next()
+        }
+      } else {
+        for (let i = 0; i > navigatedNextOrPrev; i--) {
+          exposedCalendarApi?.prev()
+        }
+      }
       setTimeout(() => {
-        let newWeekStart = weekStart
-        let newWeekEnd = weekEnd
-        if (!weekStart) {
-          newWeekStart = exposedCalendarApi.view?.activeStart || new Date()
-          setWeekStart(newWeekStart)
-        }
-        if (!weekEnd) {
-          newWeekEnd = exposedCalendarApi.view?.activeEnd || new Date()
-          setWeekEnd(newWeekEnd)
-        }
+        let weekStart = exposedCalendarApi.view?.activeStart || new Date()
+        let weekEnd = exposedCalendarApi.view?.activeEnd || new Date()
         const calendarWeekEvents = exposedCalendarApi.getEvents().filter(ev =>
-          ev?.end?.getTime() >= newWeekStart.getTime() && ev?.start?.getTime() <= newWeekEnd.getTime())
+          ev?.end?.getTime() >= weekStart.getTime() && ev?.start?.getTime() <= weekEnd.getTime())
           .map(ev => {
-            if (ev?.start?.getTime() < newWeekStart.getTime()) {
-              ev.start = newWeekStart
+            if (ev?.start?.getTime() < weekStart.getTime()) {
+              ev.start = weekStart
             }
-            if (ev?.end?.getTime() > newWeekEnd.getTime()) {
-              ev.end = newWeekEnd
+            if (ev?.end?.getTime() > weekEnd.getTime()) {
+              ev.end = weekEnd
             }
             return ev
           })
+          .filter(ev => !ev.allDay)
         const newUsersEvents = {...usersEvents}
         newUsersEvents[currentlyCalendarProcessingUser.username] = calendarWeekEvents
         setUsersEvents(newUsersEvents)
-        processNextUsersEvents(newUsersEvents, newWeekStart, newWeekEnd)
+        processNextUsersEvents(newUsersEvents, weekStart, weekEnd)
       }, 1)
     }
   }, [currentlyCalendarProcessingUser, exposedCalendarApi, areIcsEventsLoaded, areCustomEventsLoaded])
 
+  useEffect(() => {
+    processNextUsersEvents()
+  }, [navigatedNextOrPrev])
+
   const mergeTimes = (usersEvents, weekStart, weekEnd) => {
     const indices = {}
+    console.log(usersEvents)
     for (const user of users) {
       // sort events in increasing order of start times
       usersEvents[user.username] = usersEvents[user.username]?.sort((ev1, ev2) => ev1.start.getTime() - ev2.start.getTime())
@@ -156,24 +164,134 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
       }
       if (userConsolidatedBusyEvents.length === 0 || userConsolidatedFreeEvents.length === 0) {
         userConsolidatedEvents = userConsolidatedBusyEvents
-      } else { // TODO: remove free blocks from busy blocks
-
+      } else { // remove free blocks from busy blocks
+        let freeEventIndex = 0
+        let busyEventIndex = 0
+        while (freeEventIndex < userConsolidatedFreeEvents.length && busyEventIndex < userConsolidatedBusyEvents.length) {
+          const freeEvent = userConsolidatedFreeEvents[freeEventIndex]
+          const busyEvent = userConsolidatedBusyEvents[busyEventIndex]
+          if (freeEvent.start.getTime() >= busyEvent.end.getTime()) {
+            userConsolidatedEvents.push(busyEvent)
+            busyEventIndex++
+          } else if (freeEvent.end.getTime() <= busyEvent.start.getTime()) {
+            freeEventIndex++
+          } else if (freeEvent.start.getTime() <= busyEvent.start.getTime()) {
+            if (freeEvent.end.getTime() >= busyEvent.end.getTime()) {
+              busyEventIndex++
+            } else {
+              busyEvent.start = freeEvent.end
+            }
+          } else if (freeEvent.start.getTime() > busyEvent.start.getTime()) {
+            if (freeEvent.end.getTime() < busyEvent.end.getTime()) {
+              const eventToPush = {...busyEvent}
+              eventToPush.end = freeEvent.start
+              userConsolidatedEvents.push(eventToPush)
+              busyEvent.start = freeEvent.end
+            } else {
+              busyEvent.end = freeEvent.start
+            }
+          }
+        }
+        while (busyEventIndex < userConsolidatedBusyEvents.length) {
+          userConsolidatedEvents.push(userConsolidatedBusyEvents[busyEventIndex++])
+        }
       }
+      usersEvents[user.username] = userConsolidatedEvents
     }
 
-    const currEvent = {
-      isFree: true,
+    let currEvent = {
+      usersBusy: [],
       start: weekStart,
-      end: weekEnd
     }
     const mergedEvents = []
+    while (currEvent.start.getTime() < weekEnd.getTime()) {
+      let earliestEvent = null
+      for (const user of users) {
+        if (indices[user.username] >= usersEvents[user.username].length) {
+          continue
+        }
+        const event = usersEvents[user.username][indices[user.username]]
+        if (!earliestEvent || earliestEvent.start.getTime() > event.start.getTime()) {
+          earliestEvent = event
+          earliestEvent.username = user.username
+        }
+      }
+      if (!earliestEvent) {
+        if (currEvent.usersBusy.length === 0) {
+          currEvent.end = weekEnd
+          mergedEvents.push({...currEvent})
+          break
+        } else {
+          mergedEvents.push({...currEvent})
+          currEvent.start = currEvent.end
+          currEvent.usersBusy = []
+          continue
+        }
+      }
 
-    /*while (currEvent.start.getTime() < weekEnd.getTime()) {
-    }*/
-    console.log(usersEvents)
+      if (currEvent.usersBusy.length === 0) {
+        if (currEvent.start.getTime() < earliestEvent.start.getTime()) {
+          currEvent.end = earliestEvent.start
+          mergedEvents.push(currEvent)
+        }
+        currEvent = {usersBusy: [earliestEvent.username], start: earliestEvent.start, end: earliestEvent.end}
+        indices[earliestEvent.username]++
+      } else {
+        if (earliestEvent.toRemove) {
+          const eventToPush = {...currEvent}
+          eventToPush.end = earliestEvent.start
+          eventToPush.usersBusy = [...eventToPush.usersBusy]
+          mergedEvents.push(eventToPush)
+
+          const toRemoveIndex = currEvent.usersBusy.indexOf(earliestEvent.username)
+          currEvent.usersBusy = currEvent.usersBusy.slice(0, toRemoveIndex)
+            .concat(currEvent.usersBusy.slice(toRemoveIndex + 1, currEvent.usersBusy.length))
+          currEvent.start = earliestEvent.end
+          indices[earliestEvent.username]++
+        } else if (earliestEvent.start.getTime() >= currEvent.end.getTime()) {
+          mergedEvents.push(currEvent)
+          currEvent = {usersBusy: [], start: currEvent.end}
+        } else {
+          if (earliestEvent.start.getTime() > currEvent.start.getTime()) {
+            const eventToPush = {...currEvent}
+            eventToPush.end = earliestEvent.start
+            eventToPush.usersBusy = [...eventToPush.usersBusy]
+            mergedEvents.push(eventToPush)
+          }
+
+          currEvent.start = earliestEvent.start
+          currEvent.usersBusy.push(earliestEvent.username)
+          if (earliestEvent.end.getTime() < currEvent.end.getTime()) {
+            earliestEvent.start = earliestEvent.end
+            earliestEvent.toRemove = true
+          } else if (earliestEvent.end.getTime() === currEvent.end.getTime()) {
+            indices[earliestEvent.username]++
+          } else {
+            earliestEvent.start = currEvent.end
+          }
+        }
+      }
+    }
+    return mergedEvents
+  }
+
+  const createMergedSchedule = mergedEvents => {
+    setMergedCustomEvents(mergedEvents.map(event => {
+      const percentageBusy = event.usersBusy.length / users.length
+      return {
+        id: Math.random(),
+        title: `${users.length - event.usersBusy.length}/${users.length} available`,
+        startDate: event.start,
+        endDate: event.end,
+        customColor: `rgb(${255 * percentageBusy}, ${128 * (1 - percentageBusy)}, 0)`,
+        tooltip: `${event.usersBusy.length < users.length ? `Available (${users.length - event.usersBusy.length}): ${users
+          .filter(user => event.usersBusy.indexOf(user.username) < 0).map(user => user.username).join(', ')}<br>` : ''}${
+          event.usersBusy.length > 0 ? `Unavailable (${event.usersBusy.length}): ${event.usersBusy.join(', ')}` : ''}`,
+    }}))
   }
 
   const processNextUsersEvents = (usersEvents, weekStart, weekEnd) => {
+    setLoadingUserCalendarEvents(true)
     let nextUserToProcessIndex = users.findIndex(user => user?.username === currentlyCalendarProcessingUser?.username) + 1
     setCurrentlyCalendarProcessingUser(null)
     setExposedCalendarApi(null)
@@ -182,8 +300,9 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
     setTimeout(() => {
       if (nextUserToProcessIndex >= users.length) {
         if (usersEvents && Object.keys(usersEvents).length) {
-          mergeTimes(usersEvents, weekStart, weekEnd)
+          createMergedSchedule(mergeTimes(usersEvents, weekStart, weekEnd))
         }
+        setLoadingUserCalendarEvents(false)
         setUsersEvents({})
       } else {
         setCurrentlyCalendarProcessingUser(users[nextUserToProcessIndex])
@@ -193,6 +312,7 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
 
   return (
     <div id="schedule" className="wrapper">
+      <h1>Meeting scheduler</h1>
       <Container className="row">
         <Card className="mb-3 border-light">
           <div className="row g-0">
@@ -262,6 +382,18 @@ function Schedule({forceRecreateKey, setForceRecreateKey}) {
           setAreCustomEventsLoaded={setAreCustomEventsLoaded}
           setAreIcsEventsLoaded={setAreIcsEventsLoaded}
         />}
+      </div>
+      {!!mergedCustomEvents?.length && <Calendar
+        isPreview={true}
+        mergedCustomEvents={mergedCustomEvents}
+        usersToScheduleWith={users.map(user => user.username)}
+        setNavigatedNextOrPrev={setNavigatedNextOrPrev}
+        navigatedNextOrPrev={navigatedNextOrPrev}
+      />}
+      <div className="full-screen-overlay" style={{display: loadingUserCalendarEvents ? "block" : "none"}}>
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
       </div>
     </div>
   )

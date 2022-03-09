@@ -13,6 +13,7 @@ const calCustomEventSchema = new Schema({
   end_date: { type: Date },
   gcalId: { type: String },
   rrule: { type: String },
+  is_scheduled_meeting: { type: Boolean },
 })
 
 module.exports = model('CalCustomEvent', calCustomEventSchema)
