@@ -6,6 +6,7 @@ const { S3 } = require('../aws/s3')
 const Ics = require('../models/ics')
 const CalCustomEvent = require('../models/calCustomEvent')
 const GCal = require('../models/gCal')
+const User = require('../models/user')
 
 const router = express.Router()
 
@@ -15,6 +16,51 @@ router.get('/ics', verifyJWT, async (req, res, next) => {
   const username = req.user?.username
   try {
     res.send((await Ics.find({ username })).map(({s3_ics_id, ics_name}) => ({s3_ics_id, ics_name})))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:username/ics', async (req, res, next) => {
+  const {username} = req.params
+  try {
+    res.send((await Ics.find({ username })).map(({s3_ics_id, ics_name}) => ({s3_ics_id, ics_name})))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:username/ics/:s3IcsId', async (req, res, next) => {
+  const { username, s3IcsId } = req.params
+  try {
+    const user = await User.findOne({username})
+    if (!user) {
+      return next("This user doesn't exist!")
+    }
+
+    // authenticate that this ICS file belongs to this user
+    const userIcs = await Ics.findOne({ username, s3_ics_id: s3IcsId })
+    if (!userIcs) {
+      return next("This user doesn't own such ICS file!")
+    }
+
+    // return ICS file to the user
+    S3.getObject({
+      Bucket: ICS_FILES_BUCKET,
+      Key: `${username}/${s3IcsId}.ics`
+    }, (err, data) => {
+      if (err) {
+        return next(err)
+      }
+      let icsFileContent = data?.Body?.toString('utf-8')
+      if (!user.showCalendarEventNames) {
+        icsFileContent = icsFileContent
+          .replace(/SUMMARY:(.+?)\r\n/g, 'SUMMARY:(busy block)\r\n')
+          .replace(/DESCRIPTION:(.+?)\r\n/g, 'DESCRIPTION:(hidden)\r\n')
+          .replace(/LOCATION:(.+?)\r\n/g, 'LOCATION:(hidden)\r\n')
+      }
+      res.send(icsFileContent)
+    })
   } catch (err) {
     next(err)
   }
@@ -160,6 +206,34 @@ router.get('/custom-events', verifyJWT, async (req, res, next) => {
   const username = req.user?.username
   try {
     res.send((await CalCustomEvent.find({ username })))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:username/custom-events', async (req, res, next) => {
+  const {username} = req.params
+  try {
+    const user = await User.findOne({username})
+    if (!user) {
+      return next("This user doesn't exist!")
+    }
+
+    let calCustomEvents = await CalCustomEvent.find({ username })
+    if (calCustomEvents) {
+      calCustomEvents = calCustomEvents.map(event => {
+        if (!user.showCalendarEventNames) {
+          if (event.is_free_block) {
+            event.title = "(free block)"
+          } else {
+            event.title = "(busy block)"
+          }
+        }
+        return event
+      })
+    }
+
+    res.send(calCustomEvents)
   } catch (err) {
     next(err)
   }

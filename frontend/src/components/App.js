@@ -27,10 +27,7 @@ function App() {
           <Route exact path='/exchange'>
             <ExchangePage />
           </Route>
-          <Route exact path='/profle'>
-            <Profile />
-          </Route>
-          <Route exact path='/profile/:userId'>
+          <Route exact path='/profile/:username?'>
             <Profile />
           </Route>
           <Route exact path='/grouplist'>
@@ -39,9 +36,9 @@ function App() {
           <Route exact path='/new-group'>
             <CreateGroup />
           </Route>
-          <Switch>
-              <Route path="/group/:id" children={<Group />} />
-          </Switch>
+          <Route path="/group/:id">
+            <Group />
+          </Route>
           <Route exact path='/register'>
             <Register />
           </Route>

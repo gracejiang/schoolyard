@@ -81,13 +81,58 @@ router.post('/login', (req, res, next) => {
 
 // GET for current logged in user
 router.get('/profile', verifyJWT, (req, res, next) => {
-    try {
-        User.findOne({username: req.user?.username}).then(user => {
-            res.send(user)
-        })
-    } catch (err) {
-        next(err)
-    }
+  try {
+    User.findOne({username: req.user?.username}).then(user => {
+      res.send(user)
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/profile/:username', (req, res, next) => {
+  const { username } = req.params
+  try {
+    User.findOne({username}).then(userToParse => {
+      if (!userToParse) {
+        return next("User not found!")
+      }
+      // !! you have to parse props to return to not return sensitive values of other people such as passwords
+      res.send({
+        username: userToParse.username,
+        email: userToParse.email,
+        first_name: userToParse.first_name,
+        last_name: userToParse.last_name,
+        school_affiliation: userToParse.school_affiliation,
+        grad_year: userToParse.grad_year,
+        major: userToParse.major,
+        bio: userToParse.bio,
+        profile_photo: userToParse.profile_photo,
+        showCalendarEventColors: userToParse.showCalendarEventColors,
+        showCalendarEventNames: userToParse.showCalendarEventNames
+      })
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/', verifyJWT, async (req, res, next) => {
+  const username = req.user?.username
+  const {
+    showCalendarEventColors,
+    showCalendarEventNames
+  } = req.body
+  try {
+    res.send(await User.findOneAndUpdate({username}, {
+      showCalendarEventColors,
+      showCalendarEventNames
+    }, {
+      new: true
+    }))
+  } catch (err) {
+    next(err)
+  }
 })
 
 // GET for user based on slug

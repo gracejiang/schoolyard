@@ -12,6 +12,8 @@ const userSchema = new Schema(
     major: { type: String, required: true },
     bio: { type: String, required: true },
     profile_photo: { type: String, required: true },
+    showCalendarEventColors: { type: Boolean },
+    showCalendarEventNames: { type: Boolean },
   },
   { timestamps: true }
 )

@@ -10,7 +10,7 @@ function Dashboard() {
           <a href='upload-ics'>Upload ICS</a>
         </li>
         <li>
-          <a href='profile/placeholder'>Profile</a>
+          <a href='profile'>Profile</a>
         </li>
         <li>
           <a href='register'>Register</a>
