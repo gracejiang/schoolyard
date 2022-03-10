@@ -10,4 +10,4 @@ cp -R ./build/* /var/www/react/
 
 cd ../backend
 npx kill-port 8083 # kill the previously run backend
-nohup PORT=8083 npm start & # port 8083 will be mapped to 8082 by Apache2's reverse proxy defined in /etc/httpd/conf/httpd.conf
+PORT=8083 nohup npm start & # port 8083 will be mapped to 8082 by Apache2's reverse proxy defined in /etc/httpd/conf/httpd.conf
