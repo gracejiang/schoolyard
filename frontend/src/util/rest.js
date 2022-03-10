@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const SERVER_ADDRESS = {
-  localhost: 'http://localhost:8082',
+  localhost: `http://${window.location.host}:8082`,
 }
 
 export const getServerUrl = path => `${SERVER_ADDRESS.localhost}/${path}`

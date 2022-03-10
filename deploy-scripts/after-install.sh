@@ -1,0 +1,1 @@
+cp /var/app-secrets/.env ./backend/.env
