@@ -1,3 +1,5 @@
+ls .
+
 cd ../backend
 npm install
 
