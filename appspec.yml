@@ -5,6 +5,10 @@ files:
     destination: /home/ec2-user/schoolyard
 hooks:
   AfterInstall:
-    - location: deploy-scripts/install-and-run.sh
+    - location: deploy-scripts/install.sh
       timeout: 600
+      runas: ec2-user
+  ApplicationStart:
+    - location: deploy-scripts/start.sh
+      timeout: 300
       runas: ec2-user
