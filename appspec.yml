@@ -1,18 +1,10 @@
 version: 0.0
 os: linux
 files:
-  - source: /frontend/build
-    destination: /var/www/react/
+  - source: /
+    destination: /home/ec2-user/schoolyard
 hooks:
-  BeforeInstall:
-    - location: deploy-scripts/install-dependencies.sh
-      timeout: 300
-      runas: root
   AfterInstall:
-    - location: deploy-scripts/after-install.sh
-      timeout: 300
-      runas: root
-  ApplicationStart:
-    - location: deploy-scripts/start-servers.sh
-      timeout: 300
-      runas: root
+    - location: deploy-scripts/install-and-run.sh
+      timeout: 600
+      runas: ec2-user
