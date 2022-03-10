@@ -1,1 +1,1 @@
-cp /var/app-secrets/.env ./backend/.env
+cp /var/app-secrets/.env ../backend/.env
