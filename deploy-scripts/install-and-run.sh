@@ -3,13 +3,18 @@ sudo chown ec2-user . -R
 sudo chmod 755 . -R
 cp ~/app-secrets/.env ./backend/.env
 
+# install npm and node
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install v14.18.1
+
 cd backend
-/home/ec2-user/.nvm/versions/node/v14.18.1/bin/npm install
-/home/ec2-user/.nvm/versions/node/v14.18.1/bin/npm start &
+npm install
+npm start &
 
 cd ../frontend
-/home/ec2-user/.nvm/versions/node/v14.18.1/bin/npm install
-/home/ec2-user/.nvm/versions/node/v14.18.1/bin/npm build
+npm install
+npm build
 cp build /var/www/react/
 
 cd ../
