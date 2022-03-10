@@ -14,7 +14,7 @@ PORT=8083 npm start & # port 8083 will be mapped to 8082 by Apache2's reverse pr
 
 cd ../frontend
 npm install
-npm build
+npm run-script build
 cp build /var/www/react/
 
 cd ../
