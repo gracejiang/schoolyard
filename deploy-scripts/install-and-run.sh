@@ -10,6 +10,7 @@ nvm install v14.18.1
 
 cd backend
 npm install
+npx kill-port 8083 # kill the previously run backend
 PORT=8083 npm start & # port 8083 will be mapped to 8082 by Apache2's reverse proxy defined in /etc/httpd/conf/httpd.conf
 
 cd ../frontend
