@@ -5,7 +5,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install v14.18.1
 
-cd ../frontend
+cd frontend
 cp -R ./build/* /var/www/react/
 
 cd ../backend
