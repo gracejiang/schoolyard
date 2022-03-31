@@ -1,20 +1,41 @@
-import '../styles/App.css'
-import React from 'react'
-import { Button, Card, Form, Alert } from 'react-bootstrap'
+import "../styles/App.css";
+import React, { useState, useEffect } from "react";
+import { Button, Card, Form, Alert, Modal } from "react-bootstrap";
+import DiscussionPost from "./classes/DiscussionPost";
+import { get, post } from "../util/rest";
 
 function ClassDashboard() {
+  const [post, setPost] = useState("");
+  const [posts, setPosts] = useState([]);
+
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    // TODO: check if user is logged in
+    get(`user/profile`, (result) => {
+      if (result?.data) setUser(result.data);
+    });
+  });
+
+  function submitPost() {
+    var newPost = {
+      user: user.username,
+      post: post,
+    };
+    setPosts([...posts, newPost]);
+  }
+
   return (
-    <div style={{ margin: '2em' }}>
+    <div style={{ margin: "2em" }}>
       <p>
-        <a href='/'>Back to Home</a>
+        <a href="/">Back to Home</a>
       </p>
       <Card>
         <Card.Body>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Card.Title>
               CIS 120: Programming Languages and Techniques I
             </Card.Title>
-            <Button size='sm'>Join Class</Button>
+            <Button size="sm">Join Class</Button>
           </div>
           <Card.Text>
             A fast-paced introduction to the fundamental concepts of programming
@@ -29,9 +50,9 @@ function ClassDashboard() {
         </Card.Body>
       </Card>
       <br />
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ width: '18%' }}>
-          <Alert variant='success'>Class Details</Alert>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ width: "18%" }}>
+          <Alert variant="success">Class Details</Alert>
           <Card>
             <Card.Body>
               <Card.Title>Class Times</Card.Title>
@@ -48,25 +69,31 @@ function ClassDashboard() {
             </Card.Body>
           </Card>
         </div>
-        <div style={{ width: '60%' }}>
-          <Alert variant='primary'>Discussion Posts</Alert>
-          <Card className='bg-light' style={{ padding: '10px' }}>
+        <div style={{ width: "60%" }}>
+          <Alert variant="primary">Discussion Posts</Alert>
+          <Card className="bg-light" style={{ padding: "10px" }}>
             <Form.Group
-              className='mb-3'
-              controlId='exampleForm.ControlTextarea1'
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
             >
               <Form.Control
-                as='textarea'
-                placeholder='Write post here'
+                as="textarea"
+                placeholder="Write post here"
                 rows={3}
+                value={post}
+                onChange={(e) => setPost(e.target.value)}
               />
             </Form.Group>
-            <Button>Post</Button>
+            <Button onClick={() => submitPost()}>Post</Button>
           </Card>
+          <br />
+          {posts.map((post) => (
+            <DiscussionPost user={post.user} post={post.post} />
+          ))}
         </div>
-        <div style={{ width: '18%' }}>
-          <Alert variant='warning'>Upcoming Assignments</Alert>
-          <Card style={{ marginBottom: '10px' }}>
+        <div style={{ width: "18%" }}>
+          <Alert variant="warning">Upcoming Assignments</Alert>
+          <Card style={{ marginBottom: "10px" }}>
             <Card.Body>Homework 1</Card.Body>
           </Card>
           <Card>
@@ -74,8 +101,43 @@ function ClassDashboard() {
           </Card>
         </div>
       </div>
+      <br />
+      <div>
+        <Card>
+          <Card.Body>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Card.Title>Group Project Matching </Card.Title>
+            </div>
+            <Card.Text>
+              Look below for people looking for partners in group projects!
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        <Modal.Header>
+          <Modal.Title>Homework 1</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <DiscussionPost
+            user={"hh"}
+            post={"is looking for a group"}
+            desc={
+              "I am a sophomore in CIS with experience in Java! Would love to work together."
+            }
+          />
+        </Modal.Body>
+        <Modal.Header>
+          <Modal.Title>Homework 2</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <DiscussionPost
+            user={"hh"}
+            post={"is looking for a group"}
+            desc={""}
+          />
+        </Modal.Body>
+      </div>
     </div>
-  )
+  );
 }
 
-export default ClassDashboard
+export default ClassDashboard;
