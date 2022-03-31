@@ -28,11 +28,64 @@
   color: #61dafb;
 } */
 
+* {
+  font-family: "Nunito", sans-serif;
+  margin: 0;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  align-items: center;
+  background-color: #edf2f9;
+  box-shadow: 3px 3px 3px lightgrey;
+}
+
+.dashboard-navbar a {
+  margin-right: 20px;
+}
+
+.dashboard-content {
+  width: 100%;
+  background-color: #d2e0f2;
+}
+
+.dashboard-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80vw;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+.dashboard-button {
+  width: 35vw;
+  background-color: white;
+  height: 300px;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px lightgrey;
+  background-color: #edf2f9;
+}
+
+.dashboard-button {
+  font-size: 1.2em;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-buttons a {
+  text-decoration: none;
+}
+
 h1 {
   font-size: 50px;
   font-weight: 600;
   line-height: 68px;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
 h2 {
@@ -51,18 +104,18 @@ h3 {
 
 p {
   font-weight: 500;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 
 a {
-  color: #68BBCF;
+  color: #68bbcf;
   text-decoration: none;
   font-weight: 600;
   cursor: pointer;
 }
 
 a:hover {
-  color: #2C97B1;
+  color: #2c97b1;
 }
 
 .wrapper {
@@ -86,9 +139,11 @@ a:hover {
   overflow: hidden;
 }
 
-#profile .info-text-wrapper {}
+#profile .info-text-wrapper {
+}
 
-#profile .bio {}
+#profile .bio {
+}
 
 #profile .profile-header {
   clear: both;
@@ -114,7 +169,8 @@ a:hover {
   transform: scale(1.07);
 }
 
-#profile .classes, #profile .groups {
+#profile .classes,
+#profile .groups {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -122,11 +178,14 @@ a:hover {
   align-content: flex-start;
 }
 
-#profile img .profile-img {}
+#profile img .profile-img {
+}
 
-#profile h2 .section-text {}
+#profile h2 .section-text {
+}
 
-#profile h3 .desc-text {}
+#profile h3 .desc-text {
+}
 
 @keyframes App-logo-spin {
   from {
