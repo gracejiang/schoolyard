@@ -35,15 +35,9 @@ function Group() {
           <Card.Text>
             A group that has a lot of ducks!
           </Card.Text>
-          <Button variant="outline-info">Clubs</Button>
-          {' '}
-          <Button variant="outline-info">Developing</Button>
-          {' '}
-          <Button variant="outline-info">Ducks</Button>
-          {' '}
         </Card.Body>
         <Card.Footer>
-          <small className="text-muted">Last updated 3 mins ago</small>
+          <small className="text-muted">Last updated { group.updatedAt }</small>
         </Card.Footer>
       </Card>
       <br />
