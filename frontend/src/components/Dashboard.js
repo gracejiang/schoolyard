@@ -13,6 +13,9 @@ function Dashboard() {
           <a href='profile'>Profile</a>
         </li>
         <li>
+          <a href='profilelist'>Profile Search</a>
+        </li>
+        <li>
           <a href='register'>Register</a>
         </li>
         <li>

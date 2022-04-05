@@ -14,7 +14,7 @@ import {
   Alert,
 } from 'react-bootstrap'
 
-function Group() {
+function GroupList() {
   const [allGroups, setAllGroups] = useState([])
 
   useEffect(() => {
@@ -24,17 +24,19 @@ function Group() {
   }, [])
 
   return (
-    <Container fluid>
-      <br ></br>
-      { allGroups.map((currGroup) => (
-        <Card>
-          <Card.Body>
-            <a href={`/group/${currGroup._id}`}>{ currGroup.group_name }</a>
-          </Card.Body>
-        </Card>
-      )) }
-    </Container>
+    <div style={{ margin: '2em', textAlign: 'center' }}>
+      <Container fluid>
+        <br ></br>
+        { allGroups.map((currGroup) => (
+          <Card style={{ margin: '2em' }}>
+            <Card.Body>
+              <a href={`/group/${currGroup._id}`}>{ currGroup.group_name }</a>
+            </Card.Body>
+          </Card>
+        )) }
+      </Container>
+    </div>
   )
 }
 
-export default Group
+export default GroupList
