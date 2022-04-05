@@ -18,7 +18,8 @@ function ProfileList() {
   useEffect(() => {
     if (query.length > 0) {
       get(`${query}`, result => {
-        if (result?.data) setAllProfiles([...result.data])
+        if (result?.data.length > 1) setAllProfiles([...result.data])
+        else if (result?.data) setAllProfiles([result.data])
       })
     }
   }, [query])
@@ -41,7 +42,7 @@ function ProfileList() {
             <Button
               variant='primary'
               onClick={(e) => {
-                setQuery('profile/' + search)
+                setQuery('user/profile/' + search)
               }}
               style={{
                 marginRight: '1em'
