@@ -70,7 +70,7 @@ function Profile() {
         </div>
       </Container>
       <br />
-      <Container className="row">
+      {/* <Container className="row">
         <div className="classes-section">
           <h2>Classes</h2>
           <div className="classes">
@@ -140,7 +140,7 @@ function Profile() {
             <div className="w-100" />
           </div>
         </div>
-      </Container>
+      </Container> */}
     </div>
   )
 }
