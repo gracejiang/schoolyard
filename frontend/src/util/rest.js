@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const SERVER_ADDRESS = {
-  localhost: `http://${window.location.host}:8082`,
+  localhost: `http://${window.location.hostname}:8082`,
 }
 
 export const getServerUrl = path => `${SERVER_ADDRESS.localhost}/${path}`
@@ -22,6 +22,16 @@ const sendRequest = (method, path, data, onSuccess, onError, headers) => {
   if (!headers) {
     headers = {}
   }
+  console.log(axios)
+  console.log({
+    method,
+    url: getServerUrl(path),
+    data,
+    headers: {
+      'x-access-token': localStorage.accessToken,
+      ...headers,
+    },
+  })
   axios({
     method,
     url: getServerUrl(path),

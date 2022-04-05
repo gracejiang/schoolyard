@@ -152,6 +152,7 @@ router.post('/custom-event', verifyJWT, async (req, res, next) => {
     startRecurDate,
     endRecurDate,
     recurDays,
+    usersToScheduleWith,
     id,
   } = req.body
   if (typeof title !== 'string' || title.length >= 200) {
@@ -188,8 +189,17 @@ router.post('/custom-event', verifyJWT, async (req, res, next) => {
       recur_start_date: isRecurring && new Date(startRecurDate) || null,
       recur_end_date: isRecurring && new Date(endRecurDate) || null,
       recur_days: isRecurring && recurDays || null,
+      is_scheduled_meeting: !!usersToScheduleWith,
     }
-    if (id) { // edit
+    if (usersToScheduleWith) {
+      for (const username of usersToScheduleWith) {
+        const user = await User.findOne({username})
+        if (user) {
+          updateData.username = username
+          response = await CalCustomEvent.create(updateData)
+        }
+      }
+    } else if (id) { // edit
       response = await CalCustomEvent.findOneAndUpdate({username, _id: id}, updateData, {
         new: true
       });

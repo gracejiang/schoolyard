@@ -7,14 +7,26 @@ import { post, remove } from '../../util/rest'
 
 import 'react-datetime/css/react-datetime.css'
 
-function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCustomEvents, parseCustomEventPayload, setEditingEvent, setEditedEvent }) {
+function AddEventModal({
+  show,
+  setShow,
+  isEdit,
+  editedEvent,
+  customEvents,
+  setCustomEvents,
+  parseCustomEventPayload,
+  setEditingEvent,
+  setEditedEvent,
+  usersToScheduleWith,
+}) {
   const timeClosest15Multiple = Math.ceil(new Date().getTime() / 15 / 60 / 1000) * 15 * 60 * 1000
   const startTimePicker = useRef()
   const endTimePicker = useRef()
   const startDatePicker = useRef()
   const endDatePicker = useRef()
 
-  const [title, setTitle] = useState(isEdit ? editedEvent.title : '')
+  const [title, setTitle] = useState(isEdit ? editedEvent.title : (usersToScheduleWith ?
+    `Meeting ${usersToScheduleWith.join(" / ")}`: ''))
   const [isFreeBlock, setIsFreeBlock] = useState(isEdit ? editedEvent.isFreeBlock : false)
   const [isAllDay] = useState(isEdit ? editedEvent.isAllDay : false)
   const [startDate, setStartDate] = useState(editedEvent?.startDate ? new Date(editedEvent.startDate) : new Date(timeClosest15Multiple))
@@ -66,8 +78,13 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
       startRecurDate,
       endRecurDate,
       recurDays,
+      usersToScheduleWith,
       id: isEdit ? editedEvent.id : null,
     }, result => {
+      if (usersToScheduleWith) {
+        window.location.pathname = '/profile'
+        return
+      }
       let newCustomEvents = customEvents
       if (isEdit) {
         const idx = customEvents.findIndex(ev => ev.id === editedEvent.id)
@@ -93,7 +110,9 @@ function AddEventModal({ show, setShow, isEdit, editedEvent, customEvents, setCu
     <>
       <Modal show={show} onHide={() => close()}>
         <Modal.Header closeButton>
-          <Modal.Title>{!isEdit ? `Add new ` : `Edit the `}time block</Modal.Title>
+          <Modal.Title>{usersToScheduleWith ?
+            `Schedule a meeting with ${usersToScheduleWith.join(", ")}` : `${
+            !isEdit ? `Add new ` : `Edit the `}time block`}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
