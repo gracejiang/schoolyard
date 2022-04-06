@@ -149,14 +149,6 @@ router.get('/profile/:userId', verifyJWT, (req, res, next) => {
 // GET for all users stored in db
 router.get('/users', (req, res, next) => {
     try {
-        // User.find({}, (err, users) => {
-        //     var userMap = {}
-        //     users.forEach((user) => {
-        //         // Mapping username to user
-        //         userMap[user.username] = user;
-        //     });
-        //     res.send(userMap)
-        // })
         User.find({}).then(users => { res.send(users) })
     } catch (err) {
         next(err)

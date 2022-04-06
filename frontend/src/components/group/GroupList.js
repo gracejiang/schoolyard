@@ -9,7 +9,7 @@ import cornerUpLeft from "../../images/icons/corner-up-left.svg";
 
 import { Form, Container, Card, Button } from "react-bootstrap";
 
-function Group() {
+function GroupList() {
   const [allGroups, setAllGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
@@ -116,4 +116,4 @@ function Group() {
   );
 }
 
-export default Group;
+export default GroupList;

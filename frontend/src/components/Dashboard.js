@@ -23,6 +23,9 @@ function Dashboard() {
           <a href="profile">
             <div className="dashboard-button">Profile</div>
           </a>
+          <a href="profilelist">
+            <div className="dashboard-button">Profile List</div>
+          </a>
           <a href="grouplist">
             <div className="dashboard-button">Groups</div>
           </a>

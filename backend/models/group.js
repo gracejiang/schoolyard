@@ -10,7 +10,6 @@ const groupSchema = new Schema(
     contact_number: { type: String, required: true },
     join_instructions: { type: String, required: true },
     slug: { type: String, required: true },
-    // TODO: add timestamps, faq array 
   },
   { timestamps: true }
 )

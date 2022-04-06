@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Profile from "./Profile";
+import ProfileList from "./ProfileList";
 import Register from "./Register";
 import Login from "./Login";
 import ExchangePage from "./ExchangePage";
@@ -39,6 +40,9 @@ function App() {
               forceRecreateKey={forceRecreateKey}
               setForceRecreateKey={setForceRecreateKey}
             />
+          </Route>
+          <Route exact path="/profilelist">
+            <ProfileList />
           </Route>
           <Route exact path="/grouplist">
             <GroupList />
