@@ -16,6 +16,9 @@ import { get, post } from "../../util/rest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { remove } from "../../util/rest";
+import Header from "../Header";
+import * as colors from "../../styles/colors.module.scss";
+import cornerUpLeft from "../../images/icons/corner-up-left.svg";
 
 function Schedule({ forceRecreateKey, setForceRecreateKey }) {
   const { usernamesString } = useParams();
@@ -388,142 +391,167 @@ function Schedule({ forceRecreateKey, setForceRecreateKey }) {
   };
 
   return (
-    <div id="schedule" className="wrapper">
-      <h1>Meeting scheduler</h1>
-      <Container className="row">
-        <Card className="mb-3 border-light">
-          <div className="row g-0">
-            <Table striped bordered hover>
-              <tbody>
-                {users.map(
-                  ({
-                    username,
-                    profile_photo,
-                    first_name,
-                    last_name,
-                    email,
-                  }) => (
-                    <tr key={username}>
-                      <td align="center" width="110px">
-                        <img
-                          height={100}
-                          width={100}
-                          src={profile_photo}
-                          className="img-fluid rounded-start"
-                        />
-                      </td>
-                      <td
-                        width="40px"
-                        align="center"
-                        style={{ verticalAlign: "middle" }}
-                      >
-                        {username !== users[0]?.username ? (
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            className="text-primary"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              window.location.pathname =
-                                window.location.pathname.replace(
-                                  new RegExp(
-                                    `/schedule/(.+?)?(${username}-|-${username}|${username})`
-                                  ),
-                                  "/schedule/$1"
-                                );
-                            }}
+    <>
+      <Header />
+      <div
+        style={{
+          backgroundColor: colors.offWhite,
+          padding: "4em",
+        }}
+        id="schedule"
+      >
+        <a href="/">
+          <p
+            style={{
+              color: colors.blue,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <img
+              height="15px"
+              src={cornerUpLeft}
+              style={{ marginRight: "10px" }}
+            />
+            Back to Home
+          </p>
+        </a>
+        <h1>Meeting scheduler</h1>
+        <Container className="row">
+          <Card className="mb-3 border-light">
+            <div className="row g-0">
+              <Table bordered hover>
+                <tbody>
+                  {users.map(
+                    ({
+                      username,
+                      profile_photo,
+                      first_name,
+                      last_name,
+                      email,
+                    }) => (
+                      <tr key={username}>
+                        <td align="center" width="110px">
+                          <img
+                            height={100}
+                            width={100}
+                            src={profile_photo}
+                            className="img-fluid rounded-start"
                           />
-                        ) : null}
-                      </td>
-                      <td style={{ verticalAlign: "middle" }}>
-                        {first_name} {last_name} ({email})
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </Table>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "16px",
-              }}
-            >
-              Add a person:
-              <Form.Control
-                type="text"
-                placeholder="username"
-                onChange={(e) => setUsernameToAdd(e.target.value)}
-                style={{ margin: "0 16px", width: "200px" }}
-              />
-              <Button
-                variant="primary"
-                onClick={() => {
-                  get(`user/profile/${usernameToAdd}`, (result) => {
-                    if (result?.data?.username === usernameToAdd) {
-                      const matched =
-                        window.location.pathname.match(/\/schedule\/(.+?)/);
-                      if (!matched || matched[1] === "/") {
-                        window.location.pathname =
-                          window.location.pathname.replace(
-                            /\/schedule/,
-                            `/schedule/${usernameToAdd}`
-                          );
-                      } else {
-                        window.location.pathname =
-                          window.location.pathname.replace(
-                            /\/schedule\//,
-                            `/schedule/${usernameToAdd}-`
-                          );
-                      }
-                    } else {
-                      alert("No such user!");
-                    }
-                  });
+                        </td>
+                        <td
+                          width="40px"
+                          align="center"
+                          style={{ verticalAlign: "middle" }}
+                        >
+                          {username !== users[0]?.username ? (
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="text-primary"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                window.location.pathname =
+                                  window.location.pathname.replace(
+                                    new RegExp(
+                                      `/schedule/(.+?)?(${username}-|-${username}|${username})`
+                                    ),
+                                    "/schedule/$1"
+                                  );
+                              }}
+                            />
+                          ) : null}
+                        </td>
+                        <td style={{ verticalAlign: "middle" }}>
+                          {first_name} {last_name} ({email})
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "16px",
                 }}
               >
-                Submit
-              </Button>
-              <Button
-                style={{ marginLeft: "auto" }}
-                variant="primary"
-                onClick={processNextUsersEvents}
-              >
-                Find times
-              </Button>
+                Add a person:
+                <Form.Control
+                  type="text"
+                  placeholder="username"
+                  onChange={(e) => setUsernameToAdd(e.target.value)}
+                  style={{ margin: "0 16px", width: "200px" }}
+                />
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    get(`user/profile/${usernameToAdd}`, (result) => {
+                      if (result?.data?.username === usernameToAdd) {
+                        const matched =
+                          window.location.pathname.match(/\/schedule\/(.+?)/);
+                        if (!matched || matched[1] === "/") {
+                          window.location.pathname =
+                            window.location.pathname.replace(
+                              /\/schedule/,
+                              `/schedule/${usernameToAdd}`
+                            );
+                        } else {
+                          window.location.pathname =
+                            window.location.pathname.replace(
+                              /\/schedule\//,
+                              `/schedule/${usernameToAdd}-`
+                            );
+                        }
+                      } else {
+                        alert("No such user!");
+                      }
+                    });
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  style={{ marginLeft: "auto" }}
+                  variant="primary"
+                  onClick={processNextUsersEvents}
+                >
+                  Find times
+                </Button>
+              </div>
             </div>
-          </div>
-        </Card>
-      </Container>
-      <div style={{ display: "none" }}>
-        {currentlyCalendarProcessingUser && (
+          </Card>
+        </Container>
+        <div style={{ display: "none" }}>
+          {currentlyCalendarProcessingUser && (
+            <Calendar
+              isPreview={true}
+              user={currentlyCalendarProcessingUser}
+              setExposedCalendarApi={setExposedCalendarApi}
+              setAreCustomEventsLoaded={setAreCustomEventsLoaded}
+              setAreIcsEventsLoaded={setAreIcsEventsLoaded}
+            />
+          )}
+        </div>
+        {!!mergedCustomEvents?.length && (
           <Calendar
             isPreview={true}
-            user={currentlyCalendarProcessingUser}
-            setExposedCalendarApi={setExposedCalendarApi}
-            setAreCustomEventsLoaded={setAreCustomEventsLoaded}
-            setAreIcsEventsLoaded={setAreIcsEventsLoaded}
+            mergedCustomEvents={mergedCustomEvents}
+            usersToScheduleWith={users.map((user) => user.username)}
+            setNavigatedNextOrPrev={setNavigatedNextOrPrev}
+            navigatedNextOrPrev={navigatedNextOrPrev}
           />
         )}
-      </div>
-      {!!mergedCustomEvents?.length && (
-        <Calendar
-          isPreview={true}
-          mergedCustomEvents={mergedCustomEvents}
-          usersToScheduleWith={users.map((user) => user.username)}
-          setNavigatedNextOrPrev={setNavigatedNextOrPrev}
-          navigatedNextOrPrev={navigatedNextOrPrev}
-        />
-      )}
-      <div
-        className="full-screen-overlay"
-        style={{ display: loadingUserCalendarEvents ? "block" : "none" }}
-      >
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
+        <div
+          className="full-screen-overlay"
+          style={{ display: loadingUserCalendarEvents ? "block" : "none" }}
+        >
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -35,9 +35,6 @@ function Dashboard() {
           <a href="http://127.0.0.1:8000/">
             <div className="dashboard-button">Exchange Marketplace</div>
           </a>
-          <a href="upload-ics">
-            <div className="dashboard-button">Upload ICS</div>
-          </a>
         </div>
         <div
           className="col-md-9 login-page-register"

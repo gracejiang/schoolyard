@@ -9,9 +9,12 @@ $yellow: #FFD569;
 
 * {
   font-family: "Inter", sans-serif;
-  color: $darkgray;
   letter-spacing: .05em;
   margin: 0;
+}
+
+:not(.schedule *, .modal-dialog *) {
+  color: $darkgray;
 }
 
 a:link { text-decoration: none; }
